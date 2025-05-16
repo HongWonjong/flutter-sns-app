@@ -4,18 +4,11 @@
 # 📚 Firebase 데이터베이스 및 스토리지 구조
 
 ## 🌟 개요
-이 문서는 Firebase Firestore와 Firebase Storage를 사용한 데이터베이스 구조를 정의합니다. 앱은 게시물 목록 조회(무한 스크롤), 게시물 작성, 댓글 보기/작성을 지원하며, 로그인/회원가입 기능은 제외됩니다. 모든 시간은 2025년 5월 16일 오후 3시 29분(KST)을 기준으로 설정됩니다.
+이 문서는 Firebase Firestore와 Firebase Storage를 사용한 데이터베이스 구조를 정의합니다. 앱은 게시물 목록 조회(무한 스크롤), 게시물 작성, 댓글 보기/작성을 지원합니다. 
 
 ---
 
 ## 🔥 Firestore 데이터베이스 구조
-
-### 📋 1. Posts 컬렉션
-#### **Firestore 경로**
-- `/posts/{postId}`
-    - `GET /posts/{postId}` # 특정 게시물 조회
-    - `GET /posts` # 게시물 목록 조회 (페이지네이션은 클라이언트에서 구현)
-    - `POST /posts` # 새로운 게시물 작성 (Firestore의 `add()` 메서드 사용)
 
 #### **문서 데이터**
 ```json
@@ -48,10 +41,6 @@
 ---
 
 ### 💬 2. Comments 서브컬렉션
-#### **Firestore 경로**
-- `/posts/{postId}/comments/{commentId}`
-    - `GET /posts/{postId}/comments` # 특정 게시물의 댓글 목록 조회
-    - `POST /posts/{postId}/comments` # 새로운 댓글 작성 (Firestore의 `add()` 메서드 사용)
 
 #### **문서 데이터**
 ```json
