@@ -8,8 +8,6 @@ import 'package:flutter_sns_app/presentation/pages/comment_page.dart';
 import 'package:flutter_sns_app/presentation/pages/post_create_page.dart';
 import 'package:flutter_sns_app/presentation/pages/post_list_page.dart';
 import 'package:flutter_sns_app/presentation/pages/splash_page.dart';
-import 'package:flutter_sns_app/core/test_data_generator.dart';
-import 'package:flutter_sns_app/services/firebase_firestore_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,18 +58,6 @@ class HomePage extends StatelessWidget {
           children: [
             const Text('Welcome to Flutter SNS App'),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                final testDataGenerator = TestDataGenerator(
-                  FirebaseFirestoreService(), StorageDataSource()
-                );
-                await testDataGenerator.generateTestData();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('5개의 더미 데이터가 생성되었습니다.')),
-                );
-              },
-              child: const Text('더미 데이터 생성 (5개)'),
-            ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/comment', arguments: 'temp_post_id');
