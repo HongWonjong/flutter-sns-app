@@ -60,7 +60,12 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/comment', arguments: 'temp_post_id');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CommentPage(
+                    comments: [],
+                  )),
+                );
               },
               child: const Text('Go to Comment Page'),
             ),
