@@ -1,4 +1,4 @@
-/// 게시물 Firestore 데이터를 엔티티로 변환한다.
+// lib/data/dtos/post_dto.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PostDto {
@@ -18,22 +18,33 @@ class PostDto {
 
   factory PostDto.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
+    String createdAtString = data['createdAt'] ?? DateTime.now().toUtc().toIso8601String();
+    DateTime createdAt;
+    try {
+      createdAt = DateTime.parse(createdAtString).toLocal(); // UTC → KST 변환
+      print('파싱된 createdAt (KST): $createdAt');
+    } catch (e) {
+      print('createdAt 파싱 실패: $e, 기본값 사용');
+      createdAt = DateTime.now().toLocal();
+    }
     return PostDto(
       postId: doc.id,
       imageUrl: data['imageUrl'] ?? '',
       text: data['text'] ?? '',
       tags: List<String>.from(data['tags'] ?? []),
-      createdAt: DateTime.parse(data['createdAt'] ?? DateTime.now().toIso8601String()),
+      createdAt: createdAt,
     );
   }
 
   Map<String, dynamic> toFirestore() {
+    final createdAtString = createdAt.toUtc().toIso8601String();
+    print('Firestore에 저장될 createdAt (UTC): $createdAtString');
     return {
       'postId': postId,
       'imageUrl': imageUrl,
       'text': text,
       'tags': tags,
-      'createdAt': createdAt.toIso8601String(),
+      'createdAt': createdAtString,
     };
   }
 }
