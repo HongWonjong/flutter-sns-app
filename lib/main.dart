@@ -1,5 +1,8 @@
+// lib/main.dart
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sns_app/data/datasources/storage_datasource.dart';
 import 'package:flutter_sns_app/firebase_options.dart';
 import 'package:flutter_sns_app/presentation/pages/comment_page.dart';
 import 'package:flutter_sns_app/presentation/pages/post_create_page.dart';
@@ -11,7 +14,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -25,7 +28,17 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const HomePage(),
+        '/post_create': (context) => const PostCreatePage(),
+        '/comment': (context) {
+          final postId = ModalRoute.of(context)!.settings.arguments as String;
+          return const CommentPage();
+        },
+        '/post_list': (context) => const PostListPage(),
+        '/splash': (context) => const SplashPage(),
+      },
     );
   }
 }
@@ -58,28 +71,19 @@ class HomePage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const PostCreatePage()),
-                );
+                Navigator.pushNamed(context, '/post_create');
               },
               child: const Text('Go to Post Create Page'),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const PostListPage()),
-                );
+                Navigator.pushNamed(context, '/post_list');
               },
               child: const Text('Go to Post List Page'),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SplashPage()),
-                );
+                Navigator.pushNamed(context, '/splash');
               },
               child: const Text('Go to Splash Page'),
             ),
