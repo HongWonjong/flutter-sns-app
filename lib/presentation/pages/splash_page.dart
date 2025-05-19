@@ -105,7 +105,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                     child: Material(
                       color: Colors.transparent,
                       child: const Text(
-                        '이미지톡',
+                        '이미지툭',
                         style: TextStyle(
                           fontSize: 44,
                           fontWeight: FontWeight.bold,
