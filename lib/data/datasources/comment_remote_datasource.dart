@@ -1,9 +1,12 @@
 /// Firestore에서 댓글 데이터 가져오기/작성
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_sns_app/data/dtos/comment_dto.dart';
+import 'package:flutter_sns_app/services/firebase_firestore_service.dart';
 
 class CommentRemoteDataSource {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
+
+  CommentRemoteDataSource() : _firestore = FirebaseFirestoreService().firestore;
 
   Future<List<CommentDto>> getComments(String postId) async {
     final snapshot = await _firestore

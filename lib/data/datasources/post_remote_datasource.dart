@@ -1,9 +1,12 @@
 /// Firestore에서 게시물 데이터 가져오기/작성
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_sns_app/data/dtos/post_dto.dart';
+import '../../services/firebase_firestore_service.dart';
 
 class PostRemoteDataSource {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
+
+  PostRemoteDataSource() : _firestore = FirebaseFirestoreService().firestore;
 
   Future<List<PostDto>> getPosts(int limit, DocumentSnapshot? startAfter) async {
     Query query = _firestore.collection('posts').orderBy('createdAt', descending: true).limit(limit);
