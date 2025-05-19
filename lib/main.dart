@@ -1,13 +1,12 @@
-// lib/main.dart
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_sns_app/data/datasources/storage_datasource.dart';
-import 'package:flutter_sns_app/firebase_options.dart';
-import 'package:flutter_sns_app/presentation/pages/comment_page.dart';
-import 'package:flutter_sns_app/presentation/pages/post_create_page.dart';
-import 'package:flutter_sns_app/presentation/pages/post_list_page.dart';
-import 'package:flutter_sns_app/presentation/pages/splash_page.dart';
+import 'firebase_options.dart';
+
+import 'presentation/pages/comment_page.dart';
+import 'presentation/pages/post_create_page.dart';
+import 'presentation/pages/post_list_page.dart';
+import 'presentation/pages/splash_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,8 +32,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => const HomePage(),
         '/post_create': (context) => const PostCreatePage(),
         '/comment': (context) {
-          final postId = ModalRoute.of(context)!.settings.arguments as String;
-          return const CommentPage();
+          // postId 제거, comments만 빈 리스트로 넘김
+          return const CommentPage(comments: []);
         },
         '/post_list': (context) => const PostListPage(),
         '/splash': (context) => const SplashPage(),
@@ -62,9 +61,10 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const CommentPage(
-                    comments: [],
-                  )),
+                  MaterialPageRoute(
+                    // postId 제거
+                    builder: (context) => const CommentPage(comments: []),
+                  ),
                 );
               },
               child: const Text('Go to Comment Page'),
