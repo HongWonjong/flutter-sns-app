@@ -175,6 +175,9 @@ flutter_sns_app/
 │   │   │   └── splash_provider.dart   # 스플래시 화면 상태 관리: Firebase 초기화, 초기 데이터 로드
 │   │   │   └── post_provider.dart     # 게시물 상태 관리: 목록 로드, 새로고침, 작성 (이미지 검사 포함)
 │   │   │   └── comment_provider.dart  # 댓글 상태 관리: 목록 로드, 작성
+│   ├── services/  # 파이어베이스 관련 인스턴스들은 싱글톤으로 관리한다
+│   │   ├── firebase_firestore_service.dart
+│   │   └── firebase_storage_service.dart
 │   │   └── widgets/ 추후 원하는대로 추가 할 것
 │   │       └── post_card.dart         # 게시물/댓글 표시 위젯: 회색 박스, 텍스트, 삼각형 아이콘
 │   └── main.dart                      # 앱 진입점: 라우팅 (SplashPage → PostListPage), Riverpod 초기화
