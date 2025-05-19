@@ -1,17 +1,19 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sns_app/firebase_options.dart';
-import 'package:flutter_sns_app/presentation/pages/comment_page.dart';
-import 'package:flutter_sns_app/presentation/pages/post_create_page.dart';
-import 'package:flutter_sns_app/presentation/pages/post_list_page.dart';
-import 'package:flutter_sns_app/presentation/pages/splash_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'firebase_options.dart';
+
+import 'presentation/pages/comment_page.dart';
+import 'presentation/pages/post_create_page.dart';
+import 'presentation/pages/post_list_page.dart';
+import 'presentation/pages/splash_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -25,7 +27,17 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const HomePage(),
+        '/post_create': (context) => const PostCreatePage(),
+        '/comment': (context) {
+          // postId 제거, comments만 빈 리스트로 넘김
+          return const CommentPage(comments: []);
+        },
+        '/post_list': (context) => const PostListPage(),
+        '/splash': (context) => const SplashPage(),
+      },
     );
   }
 }
@@ -49,37 +61,29 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const CommentPage(
-                    comments: [],
-                  )),
+                  MaterialPageRoute(
+                    // postId 제거
+                    builder: (context) => const CommentPage(comments: []),
+                  ),
                 );
               },
               child: const Text('Go to Comment Page'),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const PostCreatePage()),
-                );
+                Navigator.pushNamed(context, '/post_create');
               },
               child: const Text('Go to Post Create Page'),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const PostListPage()),
-                );
+                Navigator.pushNamed(context, '/post_list');
               },
               child: const Text('Go to Post List Page'),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SplashPage()),
-                );
+                Navigator.pushNamed(context, '/splash');
               },
               child: const Text('Go to Splash Page'),
             ),
