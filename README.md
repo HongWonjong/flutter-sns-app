@@ -126,8 +126,6 @@ images/post2/post2.jpg
         - `PUT images/{postId}/{imageName}` # 이미지 업로드
         - `GET images/{postId}/{imageName}` # 이미지 URL 가져오기
 
-사용자가 요청한 대로, 클린 아키텍처와 `flutter_riverpod` 기반 Flutter 앱(게시물 목록, 작성, 댓글 페이지, 스플래시 화면, TensorFlow Lite와 YOLO로 이미지 검사)의 디렉토리 구조를 마크다운 형식으로 `README.md` 파일에 추가하겠습니다. 이전 대화에서 정의한 Firebase Firestore와 Storage 구조도 함께 포함하며, 현재 날짜와 시간(2025년 5월 16일 오후 3시 53분 KST)을 반영합니다.
-
 ---
 
 
@@ -177,6 +175,9 @@ flutter_sns_app/
 │   │   │   └── splash_provider.dart   # 스플래시 화면 상태 관리: Firebase 초기화, 초기 데이터 로드
 │   │   │   └── post_provider.dart     # 게시물 상태 관리: 목록 로드, 새로고침, 작성 (이미지 검사 포함)
 │   │   │   └── comment_provider.dart  # 댓글 상태 관리: 목록 로드, 작성
+│   ├── services/  # 파이어베이스 관련 인스턴스들은 싱글톤으로 관리한다
+│   │   ├── firebase_firestore_service.dart
+│   │   └── firebase_storage_service.dart
 │   │   └── widgets/ 추후 원하는대로 추가 할 것
 │   │       └── post_card.dart         # 게시물/댓글 표시 위젯: 회색 박스, 텍스트, 삼각형 아이콘
 │   └── main.dart                      # 앱 진입점: 라우팅 (SplashPage → PostListPage), Riverpod 초기화
