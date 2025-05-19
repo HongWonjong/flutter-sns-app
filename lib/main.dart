@@ -49,7 +49,9 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const CommentPage()),
+                  MaterialPageRoute(builder: (context) => const CommentPage(
+                    comments: [],
+                  )),
                 );
               },
               child: const Text('Go to Comment Page'),
