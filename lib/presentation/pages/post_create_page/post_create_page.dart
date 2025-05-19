@@ -23,7 +23,7 @@ class PostCreatePage extends StatelessWidget {
                 border: OutlineInputBorder()
               ),
             ),
-            AddTagWidget(tags: []),
+            AddTagWidget(),
             AddImageWidget(),
           ],
         ),

@@ -26,7 +26,7 @@ class _AddImageWidgetState extends State<AddImageWidget> {
           setState(() {
             imageData = data;
           });
-        }, child: Text('이미지 추가')),
+        }, child: Text('이미지 업로드')),
         imageData == null ? Icon(Icons.image) : Image.memory(imageData!),
       ],
     );
