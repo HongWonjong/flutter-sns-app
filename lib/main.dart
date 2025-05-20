@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         '/post_create': (context) => const PostCreatePage(),
         '/comment': (context) {
           // postId 제거, comments만 빈 리스트로 넘김
-          return const CommentPage(comments: []);
+          return const CommentPage(postId: '75e46e13-0986-425c-96a1-e9132eb74ded'); //test용 postId
         },
         '/post_list': (context) => const PostListPage(),
         '/splash': (context) => const SplashPage(),
@@ -64,7 +64,7 @@ class HomePage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     // postId 제거
-                    builder: (context) => const CommentPage(comments: []),
+                    builder: (context) => const CommentPage(postId: '75e46e13-0986-425c-96a1-e9132eb74ded'), //test용 postId
                   ),
                 );
               },

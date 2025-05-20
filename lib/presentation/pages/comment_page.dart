@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/comment.dart';
+import '../providers/comment_provider.dart';
 
-class CommentPage extends StatefulWidget {
-  final List<Comment> comments;
+class CommentPage extends ConsumerStatefulWidget {
+  final String postId;
 
-  const CommentPage({Key? key, required this.comments}) : super(key: key);
+  const CommentPage({Key? key, required this.postId}) : super(key: key);
 
   @override
-  State<CommentPage> createState() => _CommentPageState();
+  ConsumerState<CommentPage> createState() => _CommentPageState();
 }
 
-class _CommentPageState extends State<CommentPage> {
+class _CommentPageState extends ConsumerState<CommentPage> {
   final TextEditingController _controller = TextEditingController();
-  final List<Comment> _commentList = [];
 
   @override
   void initState() {
     super.initState();
-    _commentList.addAll(widget.comments);
+    Future.microtask(() {
+      ref.read(commentProvider(widget.postId).notifier).fetchComments();
+    });
   }
 
   void _submitComment() {
@@ -31,10 +34,8 @@ class _CommentPageState extends State<CommentPage> {
       createdAt: DateTime.now(),
     );
 
-    setState(() {
-      _commentList.add(newComment);
-      _controller.clear();
-    });
+    ref.read(commentProvider(widget.postId).notifier).createComment(newComment);
+    _controller.clear();
   }
 
   String _formatDate(DateTime dt) {
@@ -43,20 +44,22 @@ class _CommentPageState extends State<CommentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final comments = ref.watch(commentProvider(widget.postId));
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('댓글 ${_commentList.length}'),
+        title: Text('댓글 ${comments.length}'),
         leading: BackButton(),
       ),
       body: Column(
         children: [
           Expanded(
             child: ListView.separated(
-              itemCount: _commentList.length,
+              itemCount: comments.length,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               separatorBuilder: (_, __) => Divider(),
               itemBuilder: (_, index) {
-                final comment = _commentList[index];
+                final comment = comments[index];
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -91,14 +94,16 @@ class _CommentPageState extends State<CommentPage> {
                       ),
                       isDense: true,
                       contentPadding: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 12),
+                        vertical: 8,
+                        horizontal: 12,
+                      ),
                     ),
                   ),
                 ),
                 IconButton(
                   icon: Icon(Icons.send),
                   onPressed: _submitComment,
-                )
+                ),
               ],
             ),
           )
