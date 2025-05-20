@@ -1,7 +1,6 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sns_app/presentation/pages/post_create_page/view_models/post_create_view_model.dart';
 
 class AddImageWidget extends StatefulWidget {
   AddImageWidget({super.key});
@@ -11,24 +10,26 @@ class AddImageWidget extends StatefulWidget {
 }
 
 class _AddImageWidgetState extends State<AddImageWidget> {
-  final ImagePicker _picker = ImagePicker();
-  Uint8List? imageData;
-
-
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ElevatedButton(onPressed: () async {
-          final pickedXfile =  await _picker.pickImage(source: ImageSource.gallery);
-          final data = await pickedXfile!.readAsBytes();
-          setState(() {
-            imageData = data;
-          });
-        }, child: Text('이미지 업로드')),
-        imageData == null ? Icon(Icons.image) : Image.memory(imageData!),
-      ],
+    return Consumer(
+      builder: (context, ref, child) {
+        final postCreateVm = ref.read(postCreateViewModel.notifier);
+        final post = ref.watch(postCreateViewModel);
+        return Column(
+          children: [
+            post.imageData == null
+                ? Icon(Icons.image)
+                : Image.memory(post.imageData!),
+            ElevatedButton(
+              onPressed: () async {
+                postCreateVm.pickImage();
+              },
+              child: Text('이미지 업로드'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
