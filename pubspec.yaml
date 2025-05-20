@@ -21,6 +21,7 @@ dependencies:
   firebase_storage: ^12.4.5
   tflite_flutter: ^0.11.0
   cupertino_icons: ^1.0.8
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
