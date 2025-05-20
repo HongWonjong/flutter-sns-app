@@ -13,7 +13,7 @@ class CreatePostUseCase {
   Future<void> execute({
     required imageFile,
     required text,
-    required tags,
+    required List<String> tags,
   }) async {
     final postId = Uuid().v4();
     final imageUrl = await _storageRepository.uploadImage(postId, imageFile);
