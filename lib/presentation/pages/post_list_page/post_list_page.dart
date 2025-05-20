@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/domain/entities/post.dart';
 import 'package:flutter_sns_app/presentation/constants/app_styles.dart';
-import 'package:flutter_sns_app/presentation/providers/post_provider.dart';
+import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/icon_button.dart';
 import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/post_card.dart';
+import 'package:flutter_sns_app/presentation/providers/post_provider.dart';
+
 
 class PostListPage extends ConsumerStatefulWidget {
   const PostListPage({super.key});
@@ -115,8 +117,8 @@ class _PostListPageState extends ConsumerState<PostListPage> {
                             if (index < posts.length - 1)
                               Divider(
                                 height: 1,
-                                thickness: 1,
-                                color: Colors.black, // 검은색 구분선
+                                thickness: AppStyles.dividerThickness,
+                                color: AppStyles.dividerColor,
                               ),
                           ],
                         );
@@ -142,41 +144,25 @@ class _PostListPageState extends ConsumerState<PostListPage> {
               left: 16,
               child: Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white, // 흰색 배경
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.black, width: 1), // 검은색 테두리
-                      boxShadow: AppStyles.defaultShadow,
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.search,
-                        size: AppStyles.iconSizeLarge, // 큰 아이콘
-                        color: AppStyles.iconColor, // 검은색
-                      ),
-                      onPressed: () {},
-                    ),
+                  CustomIconButton(
+                    icon: Icons.search,
+                    onPressed: () {
+                      // TODO: 검색 기능 구현
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('검색 기능 준비 중')),
+                      );
+                    },
+                    tooltip: '검색',
                   ),
-                  const SizedBox(height: 16),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white, // 흰색 배경
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.black, width: 1), // 검은색 테두리
-                      boxShadow: AppStyles.defaultShadow,
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.edit,
-                        size: AppStyles.iconSizeLarge, // 큰 아이콘
-                        color: AppStyles.iconColor, // 검은색
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/post_create');
-                      },
-                    ),
+                  const SizedBox(height: 12),
+                  CustomIconButton(
+                    icon: Icons.edit,
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/post_create');
+                    },
+                    tooltip: '게시물 작성',
                   ),
+                  const SizedBox(height: 12),
                 ],
               ),
             ),
