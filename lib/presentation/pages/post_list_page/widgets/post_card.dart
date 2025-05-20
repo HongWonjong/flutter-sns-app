@@ -24,6 +24,7 @@ class PostCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppStyles.cardBorderRadius),
       ),
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(AppStyles.cardBorderRadius),
@@ -72,32 +73,39 @@ class PostCard extends StatelessWidget {
               }).toList(),
             ),
           ),
-          Positioned(
-            bottom: 8,
-            right: 8,
-            child: GestureDetector(
-              onTap: () {
-                print('Navigating to CommentPage with postId: ${post.postId}'); // 디버깅용
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CommentPage(postId: post.postId),
-                  ),
-                );
-              },
-              child: Container(
-                padding: AppStyles.iconPadding,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: AppStyles.defaultShadow,
-                ),
-                child: CustomIconButton(icon: Icons.comment, isLarge: false),
-              ),
-            ),
-          ),
           PostTextOverlay(
             text: post.text,
             cardHeight: cardHeight,
+          ),
+          Positioned(
+            bottom: 8,
+            right: 8,
+            child: Container(
+              padding: AppStyles.iconPadding,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: AppStyles.defaultShadow,
+              ),
+              child: CustomIconButton(
+                icon: Icons.comment,
+                isLarge: false,
+                onPressed: () {
+                  if (post.postId.isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommentPage(postId: post.postId),
+                      ),
+                    );
+                  } else {
+                    print('Invalid postId: ${post.postId}');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Invalid postId')),
+                    );
+                  }
+                },
+              ),
+            ),
           ),
         ],
       ),
