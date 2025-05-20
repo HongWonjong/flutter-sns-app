@@ -5,12 +5,14 @@ class CustomIconButton extends StatefulWidget {
   final IconData icon;
   final VoidCallback? onPressed;
   final String? tooltip;
+  final bool isLarge;
 
   const CustomIconButton({
     super.key,
     required this.icon,
     this.onPressed,
     this.tooltip,
+    this.isLarge = true,
   });
 
   @override
@@ -29,7 +31,7 @@ class _CustomIconButtonState extends State<CustomIconButton>
       vsync: this,
       duration: AppStyles.animationDuration,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.9).animate(
+    _scaleAnimation = Tween<double>(begin: 1.0, end: widget.isLarge ? 0.9 : 0.85).animate(
       CurvedAnimation(
         parent: _controller,
         curve: AppStyles.animationCurve,
@@ -45,6 +47,11 @@ class _CustomIconButtonState extends State<CustomIconButton>
 
   @override
   Widget build(BuildContext context) {
+    final buttonSize = widget.isLarge ? AppStyles.iconButtonSize : AppStyles.iconButtonSizeSmall;
+    final iconSize = widget.isLarge ? AppStyles.iconSizeLarge : AppStyles.iconSizeSmall;
+    final iconPadding = widget.isLarge ? AppStyles.iconPadding : AppStyles.iconPaddingSmall;
+    final splashRadius = widget.isLarge ? AppStyles.splashRadiusLarge : AppStyles.splashRadiusSmall;
+
     return GestureDetector(
       onTapDown: (_) => _controller.forward(),
       onTapUp: (_) => _controller.reverse(),
@@ -52,23 +59,28 @@ class _CustomIconButtonState extends State<CustomIconButton>
       child: ScaleTransition(
         scale: _scaleAnimation,
         child: Container(
-          width: AppStyles.iconButtonSize,
-          height: AppStyles.iconButtonSize,
+          width: buttonSize,
+          height: buttonSize,
+          padding: iconPadding,
           decoration: BoxDecoration(
-            color: AppStyles.iconBackgroundColor, // 흰색 배경
+            color: AppStyles.iconBackgroundColor,
             shape: BoxShape.circle,
-            border: AppStyles.iconBorder, // 검은색 테두리
-            boxShadow: AppStyles.defaultShadow, // 그림자
+            border: AppStyles.iconBorder,
+            boxShadow: AppStyles.defaultShadow,
           ),
-          child: IconButton(
-            icon: Icon(
-              widget.icon,
-              size: AppStyles.iconSizeLarge,
-              color: AppStyles.iconColor,
+          child: Center(
+            child: IconButton(
+              icon: Icon(
+                widget.icon,
+                size: iconSize,
+                color: AppStyles.iconColor,
+              ),
+              onPressed: widget.onPressed,
+              tooltip: widget.tooltip,
+              splashRadius: splashRadius,
+              constraints: BoxConstraints.tight(Size(buttonSize, buttonSize)),
+              padding: EdgeInsets.zero,
             ),
-            onPressed: widget.onPressed,
-            tooltip: widget.tooltip,
-            splashRadius: 24.0,
           ),
         ),
       ),

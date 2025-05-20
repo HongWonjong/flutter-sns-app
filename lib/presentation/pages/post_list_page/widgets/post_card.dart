@@ -74,11 +74,10 @@ class PostCard extends StatelessWidget {
               child: Container(
                 padding: AppStyles.iconPadding,
                 decoration: BoxDecoration(
-                  color: Colors.white,
                   shape: BoxShape.circle,
                   boxShadow: AppStyles.defaultShadow,
                 ),
-                child: CustomIconButton(icon: Icons.comment),
+                child: CustomIconButton(icon: Icons.comment, isLarge: false),
               ),
             ),
           ),
