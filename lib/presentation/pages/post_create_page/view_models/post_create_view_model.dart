@@ -2,12 +2,19 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_sns_app/domain/usecases/create_post_usecase.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../providers/post_provider.dart';
 
+class Tag {
+  String id;
+  final String text;
+  Tag({required this.id, required this.text});
+}
+
 class PostCreateState {
   final String text;
-  final List<String> tags;
+  final List<Tag> tags;
   final XFile? image;
   final bool isLoading;
 
@@ -20,7 +27,7 @@ class PostCreateState {
 
   PostCreateState copyWith({
     String? text,
-    List<String>? tags,
+    List<Tag>? tags,
     XFile? image,
     bool? isLoading,
   }) {
@@ -36,17 +43,29 @@ class PostCreateState {
 class PostCreateViewModel extends StateNotifier<PostCreateState> {
   final CreatePostUseCase _createPostUseCase;
 
-  PostCreateViewModel(this._createPostUseCase)
-      : super(PostCreateState());
+  PostCreateViewModel(this._createPostUseCase) : super(PostCreateState());
 
   void setText(String text) {
     state = state.copyWith(text: text);
   }
 
   void addTag(String tag) {
-    if (tag.isNotEmpty && !state.tags.contains(tag)) {
-      state = state.copyWith(tags: [...state.tags, tag]);
+    if (tag.isNotEmpty) {
+      state = state.copyWith(
+        tags: [
+          ...state.tags,
+          Tag(
+            id: Uuid().v4(),
+            text: tag
+          ),
+        ],
+      );
     }
+  }
+
+  void removeTag(String tagId) {
+    state.tags.removeWhere((tag) => tag.id == tagId);
+    state = state.copyWith(tags: state.tags);
   }
 
   Future<void> pickImage() async {
@@ -68,7 +87,7 @@ class PostCreateViewModel extends StateNotifier<PostCreateState> {
       await _createPostUseCase.execute(
         imageFile: imageFile,
         text: state.text,
-        tags: state.tags,
+        tags: state.tags.map((tag) => tag.text).toList(),
       );
       state = PostCreateState(); // 업로드 후 상태 초기화
     } catch (e) {
@@ -78,7 +97,8 @@ class PostCreateViewModel extends StateNotifier<PostCreateState> {
   }
 }
 
-final postCreateViewModel = StateNotifierProvider<PostCreateViewModel, PostCreateState>((ref) {
-  final createPostUseCase = ref.watch(createPostUseCaseProvider);
-  return PostCreateViewModel(createPostUseCase);
-});
+final postCreateViewModel =
+    StateNotifierProvider<PostCreateViewModel, PostCreateState>((ref) {
+      final createPostUseCase = ref.watch(createPostUseCaseProvider);
+      return PostCreateViewModel(createPostUseCase);
+    });
