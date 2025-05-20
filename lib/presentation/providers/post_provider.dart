@@ -1,13 +1,16 @@
-/// 게시물 상태 관리: 목록 로드, 새로고침, 작성 (이미지 검사 포함)
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sns_app/data/datasources/post_remote_datasource.dart';
+import 'package:flutter_sns_app/data/datasources/storage_datasource.dart';
+import 'package:flutter_sns_app/data/repositories/post_repository_impl.dart';
+import 'package:flutter_sns_app/data/repositories/storage_repository_impl.dart';
 import 'package:flutter_sns_app/domain/entities/post.dart';
+import 'package:flutter_sns_app/domain/repositories/post_repository.dart';
+import 'package:flutter_sns_app/domain/repositories/storage_repository.dart';
 import 'package:flutter_sns_app/domain/usecases/create_post_usecase.dart';
 import 'package:flutter_sns_app/domain/usecases/get_posts_usecase.dart';
-
-import '../../data/datasources/post_remote_datasource.dart';
-import '../../data/repositories/post_repository_impl.dart';
-import '../../domain/repositories/post_repository.dart';
 
 class PostProvider extends StateNotifier<List<Post>> {
   final GetPostsUseCase _getPostsUseCase;
@@ -19,18 +22,35 @@ class PostProvider extends StateNotifier<List<Post>> {
 
   Future<void> fetchPosts() async {
     if (!_hasMore) return;
-    final newPosts = await _getPostsUseCase.execute(10, _lastDocument);
-    if (newPosts.isEmpty) {
-      _hasMore = false;
-    } else {
-      _lastDocument = newPosts.last as DocumentSnapshot?;
-      state = [...state, ...newPosts];
+    try {
+      final newPosts = await _getPostsUseCase.execute(10, _lastDocument);
+      if (newPosts.isEmpty) {
+        _hasMore = false;
+      } else {
+        state = [...state, ...newPosts];
+      }
+    } catch (e) {
+      print('게시물 가져오기 실패: $e');
+      rethrow;
     }
   }
 
-  Future<void> createPost(Post post) async {
-    await _createPostUseCase.execute(post);
-    state = [post, ...state]; // 새 게시물 추가
+  Future<void> createPost({
+    required File imageFile,
+    required String text,
+    required List<String> tags,
+  }) async {
+    try {
+      await _createPostUseCase.execute(
+        imageFile: imageFile,
+        text: text,
+        tags: tags,
+      );
+      await fetchPosts();
+    } catch (e) {
+      print('게시물 생성 실패: $e');
+      rethrow;
+    }
   }
 }
 
@@ -45,7 +65,10 @@ final getPostsUseCaseProvider = Provider<GetPostsUseCase>((ref) {
 });
 
 final createPostUseCaseProvider = Provider<CreatePostUseCase>((ref) {
-  return CreatePostUseCase(ref.watch(postRepositoryProvider));
+  return CreatePostUseCase(
+    ref.watch(postRepositoryProvider),
+    ref.watch(storageRepositoryProvider),
+  );
 });
 
 final postRepositoryProvider = Provider<PostRepository>((ref) {
@@ -54,4 +77,12 @@ final postRepositoryProvider = Provider<PostRepository>((ref) {
 
 final postRemoteDataSourceProvider = Provider<PostRemoteDataSource>((ref) {
   return PostRemoteDataSource();
+});
+
+final storageRepositoryProvider = Provider<StorageRepository>((ref) {
+  return StorageRepositoryImpl(ref.watch(storageDataSourceProvider));
+});
+
+final storageDataSourceProvider = Provider<StorageDataSource>((ref) {
+  return StorageDataSource();
 });

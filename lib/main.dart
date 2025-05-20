@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'firebase_options.dart';
 
-import 'presentation/pages/comment_page.dart';
-import 'presentation/pages/post_create_page.dart';
-import 'presentation/pages/post_list_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sns_app/firebase_options.dart';
+import 'package:flutter_sns_app/presentation/pages/comment_page.dart';
+import 'package:flutter_sns_app/presentation/pages/post_create_page/post_create_page.dart';
+import 'package:flutter_sns_app/presentation/pages/post_list_page/post_list_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'presentation/pages/splash_page.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

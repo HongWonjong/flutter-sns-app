@@ -1,10 +1,11 @@
-// lib/presentation/pages/post_list_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/domain/entities/post.dart';
 import 'package:flutter_sns_app/presentation/constants/app_styles.dart';
+import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/icon_button.dart';
+import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/post_card.dart';
 import 'package:flutter_sns_app/presentation/providers/post_provider.dart';
-import 'package:flutter_sns_app/presentation/widgets/post_card.dart';
+
 
 class PostListPage extends ConsumerStatefulWidget {
   const PostListPage({super.key});
@@ -76,15 +77,6 @@ class _PostListPageState extends ConsumerState<PostListPage> {
             CustomScrollView(
               controller: _scrollController,
               slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: AppStyles.pagePadding,
-                    child: Text(
-                      '#오늘의 식단',
-                      style: AppStyles.titleStyle,
-                    ),
-                  ),
-                ),
                 if (_errorMessage != null)
                   SliverToBoxAdapter(
                     child: Center(
@@ -113,12 +105,22 @@ class _PostListPageState extends ConsumerState<PostListPage> {
                   delegate: SliverChildBuilderDelegate(
                         (context, index) {
                       if (index < posts.length) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: PostCard(
-                            post: posts[index],
-                            cardHeight: cardHeight,
-                          ),
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4.0),
+                              child: PostCard(
+                                post: posts[index],
+                                cardHeight: cardHeight,
+                              ),
+                            ),
+                            if (index < posts.length - 1)
+                              Divider(
+                                height: 1,
+                                thickness: AppStyles.dividerThickness,
+                                color: AppStyles.dividerColor,
+                              ),
+                          ],
                         );
                       }
                       return null;
@@ -140,39 +142,27 @@ class _PostListPageState extends ConsumerState<PostListPage> {
             Positioned(
               top: 16,
               left: 16,
-              child: Stack(
-                alignment: Alignment.center,
+              child: Column(
                 children: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.search,
-                      size: AppStyles.iconSizeLarge,
-                      color: AppStyles.iconColor,
-                    ),
-                    onPressed: () {},
+                  CustomIconButton(
+                    icon: Icons.search,
+                    onPressed: () {
+                      // TODO: 검색 기능 구현
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('검색 기능 준비 중')),
+                      );
+                    },
+                    tooltip: '검색',
                   ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/post_create');
-                      },
-                      child: Container(
-                        padding: AppStyles.iconPadding,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: AppStyles.defaultShadow,
-                        ),
-                        child: Icon(
-                          Icons.edit,
-                          size: AppStyles.iconSizeSmall,
-                          color: AppStyles.accentColor,
-                        ),
-                      ),
-                    ),
+                  const SizedBox(height: 12),
+                  CustomIconButton(
+                    icon: Icons.edit,
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/post_create');
+                    },
+                    tooltip: '게시물 작성',
                   ),
+                  const SizedBox(height: 12),
                 ],
               ),
             ),
