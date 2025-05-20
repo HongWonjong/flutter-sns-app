@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'post_list_page.dart';
+import 'post_list_page/post_list_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
