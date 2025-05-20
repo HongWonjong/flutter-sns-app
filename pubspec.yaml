@@ -22,6 +22,7 @@ dependencies:
   tflite_flutter: ^0.11.0
   cupertino_icons: ^1.0.8
   firebase_analytics: ^11.4.5
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
