@@ -1,65 +1,84 @@
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_sns_app/domain/entities/post.dart';
-import 'package:flutter_sns_app/presentation/providers/post_provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uuid/uuid.dart';
+import 'package:flutter_sns_app/domain/usecases/create_post_usecase.dart';
+
+import '../../../providers/post_provider.dart';
 
 class PostCreateState {
-  final String? text;
+  final String text;
   final List<String> tags;
-  final File? imagefile;
-  final Uint8List? imageData;
+  final XFile? image;
+  final bool isLoading;
 
-  PostCreateState({this.text, List<String>? tags, this.imagefile, this.imageData})
-    : tags = tags ?? [];
+  PostCreateState({
+    this.text = '',
+    this.tags = const [],
+    this.image = null,
+    this.isLoading = false,
+  });
 
   PostCreateState copyWith({
     String? text,
     List<String>? tags,
-    File? imagefile,
-    Uint8List? imageData,
+    XFile? image,
+    bool? isLoading,
   }) {
     return PostCreateState(
       text: text ?? this.text,
       tags: tags ?? this.tags,
-      imagefile: imagefile ?? this.imagefile,
-      imageData: imageData ?? this.imageData,
+      image: image ?? this.image,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 }
 
-class PostCreateViewModel extends Notifier<PostCreateState> {
-  @override
-  build() {
-    return PostCreateState();
+class PostCreateViewModel extends StateNotifier<PostCreateState> {
+  final CreatePostUseCase _createPostUseCase;
+
+  PostCreateViewModel(this._createPostUseCase)
+      : super(PostCreateState());
+
+  void setText(String text) {
+    state = state.copyWith(text: text);
   }
 
   void addTag(String tag) {
-    state = state.copyWith(tags: [...state.tags, tag]);
+    if (tag.isNotEmpty && !state.tags.contains(tag)) {
+      state = state.copyWith(tags: [...state.tags, tag]);
+    }
   }
 
-  void pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final pickedXfile = await _picker.pickImage(source: ImageSource.gallery);
-    final data = await pickedXfile!.readAsBytes();
-    state = state.copyWith( imagefile: File(pickedXfile.path), imageData: data);
+  Future<void> pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      state = state.copyWith(image: pickedFile);
+    }
   }
 
-  void createPost() {
-    ref
-        .read(createPostUseCaseProvider)
-        .execute(
-          text: state.text,
-          imageFile: state.imagefile,
-          tags: state.tags,
-        );
+  Future<void> createPost() async {
+    if (state.image == null || state.text.isEmpty) {
+      throw Exception('이미지와 텍스트는 필수입니다.');
+    }
+
+    state = state.copyWith(isLoading: true);
+    try {
+      final imageFile = File(state.image!.path);
+      await _createPostUseCase.execute(
+        imageFile: imageFile,
+        text: state.text,
+        tags: state.tags,
+      );
+      state = PostCreateState(); // 업로드 후 상태 초기화
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+      throw Exception('게시물 업로드 실패: $e');
+    }
   }
 }
 
-final postCreateViewModel =
-    NotifierProvider<PostCreateViewModel, PostCreateState>(() {
-      return PostCreateViewModel();
-    });
+final postCreateViewModel = StateNotifierProvider<PostCreateViewModel, PostCreateState>((ref) {
+  final createPostUseCase = ref.watch(createPostUseCaseProvider);
+  return PostCreateViewModel(createPostUseCase);
+});
