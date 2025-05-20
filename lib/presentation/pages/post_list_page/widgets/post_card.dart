@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sns_app/domain/entities/post.dart';
 import 'package:flutter_sns_app/presentation/constants/app_styles.dart';
+import 'package:flutter_sns_app/presentation/pages/comment_page.dart';
 import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/post_text_overlay.dart';
-
 
 import 'icon_button.dart';
 
@@ -33,6 +33,14 @@ class PostCard extends StatelessWidget {
               height: cardHeight,
               width: double.infinity,
               fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Container(
+                  height: cardHeight,
+                  color: AppStyles.backgroundColor,
+                  child: const Center(child: CircularProgressIndicator()),
+                );
+              },
               errorBuilder: (context, error, stackTrace) {
                 return Container(
                   height: cardHeight,
@@ -69,7 +77,13 @@ class PostCard extends StatelessWidget {
             right: 8,
             child: GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, '/comment', arguments: post.postId);
+                print('Navigating to CommentPage with postId: ${post.postId}'); // 디버깅용
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CommentPage(postId: post.postId),
+                  ),
+                );
               },
               child: Container(
                 padding: AppStyles.iconPadding,
