@@ -1,34 +1,36 @@
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sns_app/presentation/pages/post_create_page/view_models/post_create_view_model.dart';
 
-class AddImageWidget extends StatefulWidget {
-  AddImageWidget({super.key});
-
-  @override
-  State<AddImageWidget> createState() => _AddImageWidgetState();
-}
-
-class _AddImageWidgetState extends State<AddImageWidget> {
-  final ImagePicker _picker = ImagePicker();
-  Uint8List? imageData;
-
-
+class AddImageWidget extends StatelessWidget {
+  const AddImageWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ElevatedButton(onPressed: () async {
-          final pickedXfile =  await _picker.pickImage(source: ImageSource.gallery);
-          final data = await pickedXfile!.readAsBytes();
-          setState(() {
-            imageData = data;
-          });
-        }, child: Text('이미지 업로드')),
-        imageData == null ? Icon(Icons.image) : Image.memory(imageData!),
-      ],
+    return Consumer(
+      builder: (context, ref, child) {
+        final postCreateVM = ref.read(postCreateViewModel.notifier);
+        final postState = ref.watch(postCreateViewModel);
+        return Column(
+          children: [
+            postState.image == null
+                ? const Icon(Icons.image, size: 100)
+                : Image.file(
+              File(postState.image!.path),
+              height: 200,
+              fit: BoxFit.cover,
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await postCreateVM.pickImage();
+              },
+              child: const Text('이미지 선택'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
