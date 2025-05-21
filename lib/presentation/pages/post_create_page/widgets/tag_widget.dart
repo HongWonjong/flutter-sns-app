@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/presentation/pages/post_create_page/view_models/post_create_view_model.dart';
 
+import '../../../../domain/entities/tag.dart';
+
 class TagWidget extends StatelessWidget {
   const TagWidget(this.tag, {super.key});
   final Tag tag;

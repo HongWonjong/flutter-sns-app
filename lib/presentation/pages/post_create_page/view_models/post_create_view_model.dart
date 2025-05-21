@@ -3,15 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/core/firebase_analytics_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_sns_app/domain/usecases/create_post_usecase.dart';
+import 'package:flutter_sns_app/domain/usecases/check_no_person_usecase.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../domain/entities/tag.dart';
 import '../../../providers/post_provider.dart';
 
-class Tag {
-  String id;
-  final String text;
-  Tag({required this.id, required this.text});
-}
+
 
 class PostCreateState {
   final String text;
@@ -43,8 +41,10 @@ class PostCreateState {
 
 class PostCreateViewModel extends StateNotifier<PostCreateState> {
   final CreatePostUseCase _createPostUseCase;
+  final CheckNoPersonUseCase _checkNoPersonUseCase;
 
-  PostCreateViewModel(this._createPostUseCase) : super(PostCreateState());
+  PostCreateViewModel(this._createPostUseCase, this._checkNoPersonUseCase)
+      : super(PostCreateState());
 
   void setText(String text) {
     state = state.copyWith(text: text);
@@ -67,7 +67,12 @@ class PostCreateViewModel extends StateNotifier<PostCreateState> {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      state = state.copyWith(image: pickedFile);
+      final noPerson = await _checkNoPersonUseCase.execute(pickedFile);
+      if (noPerson) {
+        state = state.copyWith(image: pickedFile);
+      } else {
+        throw Exception('사람이 포함된 이미지는 저장할 수 없습니다.');
+      }
     }
   }
 
@@ -91,7 +96,7 @@ class PostCreateViewModel extends StateNotifier<PostCreateState> {
         hasImage: true,
       );
 
-      state = PostCreateState(); // 업로드 후 상태 초기화
+      state = PostCreateState();
     } catch (e) {
       state = state.copyWith(isLoading: false);
       throw Exception('게시물 업로드 실패: $e');
@@ -100,7 +105,8 @@ class PostCreateViewModel extends StateNotifier<PostCreateState> {
 }
 
 final postCreateViewModel =
-    StateNotifierProvider<PostCreateViewModel, PostCreateState>((ref) {
-      final createPostUseCase = ref.watch(createPostUseCaseProvider);
-      return PostCreateViewModel(createPostUseCase);
-    });
+StateNotifierProvider<PostCreateViewModel, PostCreateState>((ref) {
+  final createPostUseCase = ref.watch(createPostUseCaseProvider);
+  final checkNoPersonUseCase = ref.watch(checkNoPersonUseCaseProvider);
+  return PostCreateViewModel(createPostUseCase, checkNoPersonUseCase);
+});
