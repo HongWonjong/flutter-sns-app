@@ -45,7 +45,6 @@ class PostCard extends ConsumerWidget {
     return Container(
       height: cardHeight,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppStyles.cardBorderRadius),
       ),
       child: Stack(
         clipBehavior: Clip.none,
