@@ -67,7 +67,7 @@ class _PostListPageState extends ConsumerState<PostListPage> {
       _currentTag = tag;
     });
     try {
-      ref.read(postProvider.notifier).state = []; // 검색 전 상태 초기화
+      ref.read(postProvider.notifier).state = [];
       await ref.read(postProvider.notifier).searchPostsByTag(tag);
     } catch (e) {
       setState(() {
@@ -159,105 +159,135 @@ class _PostListPageState extends ConsumerState<PostListPage> {
 
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: [
-            CustomScrollView(
-              controller: _scrollController,
-              slivers: [
-                if (_errorMessage != null)
-                  SliverToBoxAdapter(
-                    child: Center(
-                      child: Padding(
-                        padding: AppStyles.pagePadding,
-                        child: Column(
-                          children: [
-                            Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
-                            const SizedBox(height: 10),
-                            ElevatedButton(
-                              onPressed: _loadPosts,
-                              child: const Text('재시도'),
-                            ),
-                          ],
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                AppStyles.listBackgroundGradientStart,
+                AppStyles.listBackgroundGradientEnd,
+              ],
+            ),
+          ),
+          child: Stack(
+            children: [
+              CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  if (_errorMessage != null)
+                    SliverToBoxAdapter(
+                      child: Center(
+                        child: Padding(
+                          padding: AppStyles.pagePadding,
+                          child: Column(
+                            children: [
+                              Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
+                              const SizedBox(height: 10),
+                              ElevatedButton(
+                                onPressed: _loadPosts,
+                                child: const Text('재시도'),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                if (posts.isEmpty && !_isLoadingMore && _errorMessage == null)
-                  SliverToBoxAdapter(
-                    child: Center(
-                      child: Text(_isSearchingByTag ? '검색 결과가 없습니다.' : '게시물이 없습니다.'),
-                    ),
-                  ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                      if (index < posts.length) {
-                        return Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4.0),
-                              child: PostCard(
-                                post: posts[index],
-                                cardHeight: cardHeight,
-                              ),
-                            ),
-                            if (index < posts.length - 1)
-                              Divider(
-                                height: 1,
-                                thickness: AppStyles.dividerThickness,
-                                color: AppStyles.dividerColor,
-                              ),
-                          ],
-                        );
-                      }
-                      return null;
-                    },
-                    childCount: posts.length,
-                  ),
-                ),
-                if (_isLoadingMore)
-                  SliverToBoxAdapter(
-                    child: Center(
-                      child: Padding(
-                        padding: AppStyles.pagePadding,
-                        child: const CircularProgressIndicator(),
+                  if (posts.isEmpty && !_isLoadingMore && _errorMessage == null)
+                    SliverToBoxAdapter(
+                      child: Center(
+                        child: Text(_isSearchingByTag ? '검색 결과가 없습니다.' : '게시물이 없습니다.'),
                       ),
                     ),
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                        if (index < posts.length) {
+                          return Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppStyles.pagePadding.left,
+                                  vertical: AppStyles.cardSpacing,
+                                ),
+                                child: AnimatedOpacity(
+                                  opacity: 1.0,
+                                  duration: AppStyles.cardAnimationDuration,
+                                  curve: AppStyles.animationCurve,
+                                  child: PostCard(
+                                    post: posts[index],
+                                    cardHeight: cardHeight,
+                                  ),
+                                ),
+                              ),
+                              if (index < posts.length - 1)
+                                Container(
+                                  height: AppStyles.dividerThickness,
+                                  margin: EdgeInsets.symmetric(
+                                    horizontal: AppStyles.pagePadding.left,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        AppStyles.dividerGradientStart,
+                                        AppStyles.dividerGradientEnd,
+                                      ],
+                                    ),
+                                    boxShadow: AppStyles.dividerShadow,
+                                  ),
+                                ),
+                            ],
+                          );
+                        }
+                        return null;
+                      },
+                      childCount: posts.length,
+                    ),
                   ),
-              ],
-            ),
-            Positioned(
-              top: 16,
-              left: 16,
-              child: Column(
-                children: [
-                  CustomIconButton(
-                    icon: Icons.search,
-                    onPressed: () {
-                      if (_isSearchingByTag) {
-                        _cancelSearch();
-                      } else {
-                        _showSearchDialog(context);
-                      }
-                    },
-                    tooltip: _isSearchingByTag ? '검색 취소' : '검색',
-                    backgroundColor: _isSearchingByTag ? AppStyles.searchActiveBackgroundColor : null,
-                    isLarge: true,
-                  ),
-                  const SizedBox(height: 12),
-                  CustomIconButton(
-                    icon: Icons.edit,
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/post_create');
-                    },
-                    tooltip: '게시물 작성',
-                    isLarge: true,
-                  ),
-                  const SizedBox(height: 12),
+                  if (_isLoadingMore)
+                    SliverToBoxAdapter(
+                      child: Center(
+                        child: Padding(
+                          padding: AppStyles.pagePadding,
+                          child: const CircularProgressIndicator(),
+                        ),
+                      ),
+                    ),
                 ],
               ),
-            ),
-          ],
+              Positioned(
+                top: 16,
+                left: 16,
+                child: Column(
+                  children: [
+                    CustomIconButton(
+                      icon: Icons.search,
+                      onPressed: () {
+                        if (_isSearchingByTag) {
+                          _cancelSearch();
+                        } else {
+                          _showSearchDialog(context);
+                        }
+                      },
+                      tooltip: _isSearchingByTag ? '검색 취소' : '검색',
+                      backgroundColor: _isSearchingByTag ? AppStyles.searchActiveBackgroundColor : null,
+                      isLarge: true,
+                    ),
+                    const SizedBox(height: 12),
+                    CustomIconButton(
+                      icon: Icons.edit,
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/post_create');
+                      },
+                      tooltip: '게시물 작성',
+                      isLarge: true,
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

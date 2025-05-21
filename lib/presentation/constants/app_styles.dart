@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppStyles {
-  // 색상
   static const Color backgroundColor = Colors.grey;
   static const Color cardBackgroundColor = Color(0xFFE0E0E0);
-  static const Color tagBackgroundColor = Color(0x42D3D3D3);
+  static const Color tagBackgroundColor = Color(0xFFFFFFFF);
   static const Color tagTextColor = Colors.black;
   static const Color iconColor = Colors.black;
   static const Color shadowColor = Colors.black26;
@@ -12,15 +11,18 @@ class AppStyles {
   static const Color dividerColor = Colors.black;
   static const Color iconBackgroundColor = Colors.white;
   static const Color overlayBackgroundColor = Colors.transparent;
-  static const Color searchActiveBackgroundColor = Colors.blue; // 추가: 검색 중 배경색
+  static const Color searchActiveBackgroundColor = Colors.blue;
+  static const Color dividerGradientStart = Color(0xFFBBBBBB); // 추가: 구분선 그라디언트 시작
+  static const Color dividerGradientEnd = Color(0xFF888888); // 추가: 구분선 그라디언트 끝
+  static const Color listBackgroundGradientStart = Color(0xFFF5F5F5); // 추가: 목록 배경 그라디언트
+  static const Color listBackgroundGradientEnd = Color(0xFFE0E0E0);
 
-  // 크기
   static const double cardBorderRadius = 12.0;
   static const double iconSizeSmall = 24.0;
   static const double iconSizeLarge = 40.0;
   static const double chipPaddingHorizontal = 4.0;
   static const double chipSpacing = 8.0;
-  static const double dividerThickness = 1.0;
+  static const double dividerThickness = 0.5; // 수정: 더 얇은 구분선
   static const double iconButtonSize = 64.0;
   static const double iconButtonSizeSmall = 48.0;
   static const double overlayHeightRatio = 0.8;
@@ -30,8 +32,8 @@ class AppStyles {
   static const double maxOverlayFontSize = 48.0;
   static const double splashRadiusLarge = 20.0;
   static const double splashRadiusSmall = 16.0;
+  static const double cardSpacing = 8.0; // 추가: 카드 간 간격
 
-  // 패딩
   static const EdgeInsets pagePadding = EdgeInsets.all(16.0);
   static const EdgeInsets cardPadding = EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0);
   static const EdgeInsets contentPadding = EdgeInsets.all(12.0);
@@ -40,7 +42,6 @@ class AppStyles {
   static const EdgeInsets iconPaddingSmall = EdgeInsets.all(2.0);
   static const EdgeInsets overlayTextPadding = EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0);
 
-  // 텍스트 스타일
   static const TextStyle titleStyle = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
@@ -69,7 +70,6 @@ class AppStyles {
     ],
   );
 
-  // 그림자
   static const List<BoxShadow> defaultShadow = [
     BoxShadow(
       color: shadowColor,
@@ -79,7 +79,15 @@ class AppStyles {
     ),
   ];
 
-  // 테두리
+  static const List<BoxShadow> dividerShadow = [ // 추가: 구분선 그림자
+    BoxShadow(
+      color: shadowColor,
+      blurRadius: 2.0,
+      offset: Offset(0, 1),
+      spreadRadius: 0.5,
+    ),
+  ];
+
   static const Border iconBorder = Border(
     top: BorderSide(color: dividerColor, width: 1.5),
     bottom: BorderSide(color: dividerColor, width: 1.5),
@@ -87,7 +95,7 @@ class AppStyles {
     right: BorderSide(color: dividerColor, width: 1.5),
   );
 
-  // 애니메이션
   static const Duration animationDuration = Duration(milliseconds: 200);
   static const Curve animationCurve = Curves.easeInOut;
+  static const Duration cardAnimationDuration = Duration(milliseconds: 300); // 추가: 카드 애니메이션
 }
