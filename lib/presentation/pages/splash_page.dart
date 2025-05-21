@@ -10,46 +10,79 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
-  // 텍스트 확대/축소 애니메이션 컨트롤러
-  late final AnimationController _controller;
-  late final Animation<double> _animation;
+  static const String appName = '이미지툭';
 
-  // 페이지 전환 시 텍스트 크게 확대되는 애니메이션 컨트롤러
-  late final AnimationController _transitionController;
-  late final Animation<double> _transitionAnimation;
+  late final List<AnimationController> _letterControllers;
+  late List<Animation<double>> _scaleAnimations;
+  late List<Animation<Offset>> _slideAnimations;
+
+  bool _animationsInitialized = false;
 
   @override
   void initState() {
     super.initState();
 
-    // 텍스트가 반복적으로 작아졌다 커지는 애니메이션 설정
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2), // 2초 간의 애니메이션
-    )..repeat(reverse: true); // 반복 애니메이션 (역방향 포함)
-
-    _animation = Tween<double>(begin: 0.8, end: 1.2).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    _letterControllers = List.generate(
+      appName.length,
+      (index) => AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 300), // ← 각 글자 애니메이션 속도
+      ),
     );
 
-    // 전환 애니메이션: 텍스트가 커지면서 페이지 이동
-    _transitionController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1), // 1초 애니메이션
-    );
+    _scaleAnimations = [];
+    _slideAnimations = [];
+  }
 
-    _transitionAnimation = Tween<double>(begin: 1.0, end: 3.0).animate(
-      CurvedAnimation(parent: _transitionController, curve: Curves.easeOut),
-    );
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-    // 5초 후 애니메이션 중단 + 화면 전환
-    Timer(const Duration(seconds: 5), () async {
-      _controller.stop(); // 반복 애니메이션 중단
-      await _transitionController.forward(); // 텍스트 확대 전환 실행
+    if (!_animationsInitialized) {
+      final size = MediaQuery.of(context).size;
+      final screenWidth = size.width;
+      final screenHeight = size.height;
 
+      _scaleAnimations = _letterControllers.map((controller) {
+        return Tween<double>(begin: 0.6, end: 1.0).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Curves.elasticOut,
+          ),
+        );
+      }).toList();
+
+      _slideAnimations = List.generate(appName.length, (index) {
+        final startX = -(screenWidth * 0.5 + index * 40);
+        final startY = -(screenHeight * 0.5) + index * 30;
+
+        return Tween<Offset>(
+          begin: Offset(startX, startY),
+          end: Offset.zero,
+        ).animate(
+          CurvedAnimation(
+            parent: _letterControllers[index],
+            curve: Curves.bounceOut,
+          ),
+        );
+      });
+
+      _animationsInitialized = true;
+
+      _startAnimations();
+    }
+  }
+
+  Future<void> _startAnimations() async {
+    await Future.delayed(const Duration(milliseconds: 500)); // ← 첫 글자 시작 전 지연 시간
+
+    for (var controller in _letterControllers) {
+      await controller.forward(); // 애니메이션 실행
+      await Future.delayed(const Duration(milliseconds: 250)); // ← 글자 간 지연 시간
+    }
+
+    Timer(const Duration(seconds: 2), () { // ← 애니메이션 완료 후 다음 화면 전환까지 대기 시간
       if (!mounted) return;
-
-      // PostListPage로 이동 (SplashPage 제거)
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const PostListPage()),
       );
@@ -58,8 +91,9 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _controller.dispose();
-    _transitionController.dispose();
+    for (var controller in _letterControllers) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -67,57 +101,56 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        // GIF 배경 설정
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/splash.gif'),
             fit: BoxFit.cover,
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // 서브 타이틀 텍스트
-              const Text(
-                '일상을 툭! 툭!',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
-                  letterSpacing: 1.3,
+        child: SafeArea(
+          child: Align(
+            alignment: const Alignment(0, -0.4),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  '일상을 툭! 툭!',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87,
+                    letterSpacing: 1.3,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 30),
-              // 메인 타이틀 애니메이션 (확대/축소 → 전환 시 확대)
-              AnimatedBuilder(
-                animation: _transitionAnimation,
-                builder: (context, child) {
-                  return Transform.scale(
-                    scale: _transitionAnimation.value,
-                    child: child,
-                  );
-                },
-                child: ScaleTransition(
-                  scale: _animation,
-                  child: Hero(
-                    tag: 'appTitleHero', // Hero 애니메이션을 위한 태그
-                    child: Material(
-                      color: Colors.transparent,
-                      child: const Text(
-                        '이미지툭',
-                        style: TextStyle(
-                          fontSize: 44,
+                const SizedBox(height: 50),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(appName.length, (index) {
+                    return AnimatedBuilder(
+                      animation: _letterControllers[index],
+                      builder: (context, child) {
+                        return Transform.translate(
+                          offset: _slideAnimations[index].value,
+                          child: Transform.scale(
+                            scale: _scaleAnimations[index].value,
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: Text(
+                        appName[index],
+                        style: const TextStyle(
+                          fontSize: 54,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
                           letterSpacing: 2.5,
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  }),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
