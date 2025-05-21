@@ -152,19 +152,6 @@ class PostCard extends ConsumerWidget {
                     FutureBuilder<int>(
                       future: getLikesCountUseCase.execute(post.postId),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return Text(
-                            "0",
-                            style: AppStyles.likeCommentCountStyle,
-                          );
-                        }
-                        if (snapshot.hasError) {
-                          print('Error fetching comment count: ${snapshot.error}');
-                          return Text(
-                            "0",
-                            style: AppStyles.likeCommentCountStyle,
-                          );
-                        }
                         return Text(
                           snapshot.data?.toString() ?? "0",
                           style: AppStyles.likeCommentCountStyle,
