@@ -20,4 +20,15 @@ class PostRemoteDataSource {
   Future<void> createPost(PostDto post) async {
     await _firestore.collection('posts').doc(post.postId).set(post.toFirestore());
   }
+  Future<List<PostDto>> searchPostsByTag(String tag, int limit, DocumentSnapshot? startAfter) async {
+    Query query = _firestore.collection('posts')
+        .where('tags', arrayContains: tag)
+        .orderBy('createdAt', descending: true)
+        .limit(limit);
+    if (startAfter != null) {
+      query = query.startAfterDocument(startAfter);
+    }
+    final snapshot = await query.get();
+    return snapshot.docs.map((doc) => PostDto.fromFirestore(doc)).toList();
+  }
 }

@@ -6,6 +6,7 @@ class CustomIconButton extends StatefulWidget {
   final VoidCallback? onPressed;
   final String? tooltip;
   final bool isLarge;
+  final Color? backgroundColor; // 추가: 배경색 속성
 
   const CustomIconButton({
     super.key,
@@ -13,6 +14,7 @@ class CustomIconButton extends StatefulWidget {
     this.onPressed,
     this.tooltip,
     this.isLarge = true,
+    this.backgroundColor,
   });
 
   @override
@@ -63,7 +65,7 @@ class _CustomIconButtonState extends State<CustomIconButton>
           height: buttonSize,
           padding: iconPadding,
           decoration: BoxDecoration(
-            color: AppStyles.iconBackgroundColor,
+            color: widget.backgroundColor ?? AppStyles.iconBackgroundColor,
             shape: BoxShape.circle,
             border: AppStyles.iconBorder,
             boxShadow: AppStyles.defaultShadow,
