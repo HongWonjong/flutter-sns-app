@@ -47,6 +47,6 @@ app.*.map.json
 google-services.json
 firebase.json
 /lib/firebase_options.dart
-pubspec.lock
+echo "pubspec.lock"
 
 sentry.properties
