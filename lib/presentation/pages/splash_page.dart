@@ -74,14 +74,14 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   }
 
   Future<void> _startAnimations() async {
-    await Future.delayed(const Duration(milliseconds: 500)); // ← 첫 글자 시작 전 지연 시간
+    await Future.delayed(const Duration(milliseconds: 500));
 
     for (var controller in _letterControllers) {
       await controller.forward(); // 애니메이션 실행
-      await Future.delayed(const Duration(milliseconds: 250)); // ← 글자 간 지연 시간
+      await Future.delayed(const Duration(milliseconds: 250));
     }
 
-    Timer(const Duration(seconds: 2), () { // ← 애니메이션 완료 후 다음 화면 전환까지 대기 시간
+    Timer(const Duration(seconds: 2), () {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const PostListPage()),
