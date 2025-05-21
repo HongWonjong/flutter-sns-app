@@ -48,6 +48,7 @@ google-services.json
 firebase.json
 /lib/firebase_options.dart
 echo "pubspec.lock"
+assets/yolov8n.tflite
 
 sentry.properties
 /pubspec.lock
