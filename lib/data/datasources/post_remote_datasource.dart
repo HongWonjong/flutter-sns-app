@@ -13,6 +13,11 @@ class PostRemoteDataSource {
     return snapshot.docs.length;
   }
 
+  Future<int> getLikesCount(String postId) async {
+    final snapshot = await _firestore.collection('posts').doc(postId).get();
+    return (snapshot.data()?['likes'] as List<dynamic>).length;
+  }
+
   Future<List<PostDto>> getPosts(int limit, DocumentSnapshot? startAfter) async {
     Query query = _firestore.collection('posts').orderBy('createdAt', descending: true).limit(limit);
     if (startAfter != null) {

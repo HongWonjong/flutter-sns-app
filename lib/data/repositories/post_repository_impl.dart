@@ -29,6 +29,10 @@ class PostRepositoryImpl implements PostRepository {
     return await _dataSource.getCommentCount(postId);
   }
 
+  Future<int> getLikesCount(String postId) async {
+    return await _dataSource.getLikesCount(postId);
+  }
+
   @override
   Future<void> createPost(Post post) async {
     final dto = PostDto(
