@@ -3,17 +3,18 @@ import 'package:flutter_sns_app/domain/entities/post.dart';
 import 'package:flutter_sns_app/presentation/constants/app_styles.dart';
 import 'package:flutter_sns_app/presentation/pages/comment_page.dart';
 import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/post_text_overlay.dart';
-
-import 'icon_button.dart';
+import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/icon_button.dart';
 
 class PostCard extends StatelessWidget {
   final Post post;
   final double cardHeight;
+  final void Function(String)? onTagTap;
 
   const PostCard({
     super.key,
     required this.post,
     required this.cardHeight,
+    this.onTagTap,
   });
 
   @override
@@ -62,13 +63,20 @@ class PostCard extends StatelessWidget {
             child: Wrap(
               spacing: AppStyles.chipSpacing,
               children: post.tags.map((tag) {
-                return Chip(
-                  label: Text(
-                    tag,
-                    style: AppStyles.tagStyle,
+                return GestureDetector(
+                  onTap: () {
+                    if (onTagTap != null) {
+                      onTagTap!(tag);
+                    }
+                  },
+                  child: Chip(
+                    label: Text(
+                      tag,
+                      style: AppStyles.tagStyle,
+                    ),
+                    backgroundColor: AppStyles.tagBackgroundColor,
+                    padding: AppStyles.chipPadding,
                   ),
-                  backgroundColor: AppStyles.tagBackgroundColor,
-                  padding: AppStyles.chipPadding,
                 );
               }).toList(),
             ),
