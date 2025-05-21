@@ -73,7 +73,7 @@ class AppStyles {
   );
   static final TextStyle likeCommentCountStyle = TextStyle(
     color: Colors.white,
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: FontWeight.bold,
     shadows: [
       Shadow(
