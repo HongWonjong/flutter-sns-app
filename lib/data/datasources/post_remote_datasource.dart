@@ -8,6 +8,11 @@ class PostRemoteDataSource {
 
   PostRemoteDataSource() : _firestore = FirebaseFirestoreService().firestore;
 
+  Future<int> getCommentCount(String postId) async {
+    final snapshot = await _firestore.collection('posts').doc(postId).collection('comments').get();
+    return snapshot.docs.length;
+  }
+
   Future<List<PostDto>> getPosts(int limit, DocumentSnapshot? startAfter) async {
     Query query = _firestore.collection('posts').orderBy('createdAt', descending: true).limit(limit);
     if (startAfter != null) {

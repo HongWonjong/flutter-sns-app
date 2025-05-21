@@ -7,6 +7,9 @@ import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/post_t
 import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/icon_button.dart';
 import 'package:flutter_sns_app/presentation/providers/post_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_sns_app/domain/usecases/get_comment_count_usecase.dart';
+
+import '../../../providers/comment_count_provider.dart';
 
 class PostCard extends ConsumerWidget {
   final Post post;
@@ -31,6 +34,7 @@ class PostCard extends ConsumerWidget {
     final deviceId = prefs.getString('device_id') ?? '';
     final isLiked = await _isPostLiked(postId);
 
+
     if (isLiked) {
       await prefs.remove('like_${postId}_$deviceId');
       await ref.read(postProvider.notifier).unlikePost(postId, deviceId);
@@ -42,6 +46,7 @@ class PostCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final getCommentCountUseCase = ref.read(getCommentCountUseCaseProvider);
     return Container(
       height: cardHeight,
       decoration: BoxDecoration(),
@@ -179,9 +184,27 @@ class PostCard extends ConsumerWidget {
                         iconColor: null,
                       ),
                     ),
-                    Text(
-                      "342",
-                      style: AppStyles.likeCommentCountStyle,
+                    FutureBuilder<int>(
+                      future: getCommentCountUseCase.execute(post.postId),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Text(
+                            "0",
+                            style: AppStyles.likeCommentCountStyle,
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          print('Error fetching comment count: ${snapshot.error}');
+                          return Text(
+                            "0",
+                            style: AppStyles.likeCommentCountStyle,
+                          );
+                        }
+                        return Text(
+                          snapshot.data?.toString() ?? "0",
+                          style: AppStyles.likeCommentCountStyle,
+                        );
+                      },
                     ),
                   ],
                 ),
