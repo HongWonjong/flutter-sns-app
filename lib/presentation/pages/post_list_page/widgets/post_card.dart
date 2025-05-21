@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_sns_app/domain/usecases/get_comment_count_usecase.dart';
 
 import '../../../providers/comment_count_provider.dart';
+import '../../../providers/get_likes_count_usecase_provider.dart';
 
 class PostCard extends ConsumerWidget {
   final Post post;
@@ -47,6 +48,7 @@ class PostCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final getCommentCountUseCase = ref.read(getCommentCountUseCaseProvider);
+    final getLikesCountUseCase = ref.read(getLikesCountUseCaseProvider);
     return Container(
       height: cardHeight,
       decoration: BoxDecoration(),
@@ -147,9 +149,27 @@ class PostCard extends ConsumerWidget {
                         },
                       ),
                     ),
-                    Text(
-                      "342",
-                      style: AppStyles.likeCommentCountStyle,
+                    FutureBuilder<int>(
+                      future: getLikesCountUseCase.execute(post.postId),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Text(
+                            "0",
+                            style: AppStyles.likeCommentCountStyle,
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          print('Error fetching comment count: ${snapshot.error}');
+                          return Text(
+                            "0",
+                            style: AppStyles.likeCommentCountStyle,
+                          );
+                        }
+                        return Text(
+                          snapshot.data?.toString() ?? "0",
+                          style: AppStyles.likeCommentCountStyle,
+                        );
+                      },
                     ),
                   ],
                 ),
