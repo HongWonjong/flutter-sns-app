@@ -87,6 +87,36 @@ class PostCard extends StatelessWidget {
           ),
           Positioned(
             bottom: 8,
+            right: 80,
+            child: Container(
+              padding: AppStyles.iconPadding,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: AppStyles.defaultShadow,
+              ),
+              child: CustomIconButton(
+                icon: Icons.favorite,
+                isLarge: false,
+                onPressed: () {
+                  if (post.postId.isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommentPage(postId: post.postId),
+                      ),
+                    );
+                  } else {
+                    print('Invalid postId: ${post.postId}');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Invalid postId')),
+                    );
+                  }
+                },
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 8,
             right: 8,
             child: Container(
               padding: AppStyles.iconPadding,
