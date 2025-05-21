@@ -5,6 +5,7 @@ import 'package:flutter_sns_app/presentation/constants/app_styles.dart';
 import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/end_of_posts_message.dart';
 import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/icon_button.dart';
 import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/post_card.dart';
+import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/search_dialog.dart';
 import 'package:flutter_sns_app/presentation/providers/post_provider.dart';
 
 class PostListPage extends ConsumerStatefulWidget {
@@ -102,44 +103,13 @@ class _PostListPageState extends ConsumerState<PostListPage> {
   }
 
   Future<void> _showSearchDialog(BuildContext context) async {
-    String? tag;
-    await showDialog(
+    final tag = await showDialog<String>(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('태그 검색'),
-          content: TextField(
-            onChanged: (value) {
-              tag = value;
-            },
-            decoration: const InputDecoration(hintText: '태그를 입력하세요 (예: #감정)'),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('취소'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (tag != null && tag!.isNotEmpty) {
-                  if (!tag!.startsWith('#')) {
-                    tag = '#$tag';
-                  }
-                  Navigator.of(context).pop(tag);
-                }
-              },
-              child: const Text('검색'),
-            ),
-          ],
-        );
-      },
-    ).then((value) {
-      if (value != null) {
-        _searchPostsByTag(value);
-      }
-    });
+      builder: (context) => const SearchDialog(),
+    );
+    if (tag != null) {
+      _searchPostsByTag(tag);
+    }
   }
 
   @override
