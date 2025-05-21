@@ -20,6 +20,7 @@ class PostRepositoryImpl implements PostRepository {
       text: dto.text,
       tags: dto.tags,
       createdAt: dto.createdAt,
+      likes: [],
     )).toList();
   }
 
@@ -43,6 +44,7 @@ class PostRepositoryImpl implements PostRepository {
       text: dto.text,
       tags: dto.tags,
       createdAt: dto.createdAt,
+      likes: [],
     )).toList();
   }
 }

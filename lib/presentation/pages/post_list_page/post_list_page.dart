@@ -277,7 +277,7 @@ class _PostListPageState extends ConsumerState<PostListPage> {
                       },
                       tooltip: _isSearchingByTag ? '검색 취소' : '검색',
                       backgroundColor: _isSearchingByTag ? AppStyles.searchActiveBackgroundColor : null,
-                      isLarge: true,
+                      isLarge: true, iconColor: null,
                     ),
                     const SizedBox(height: 12),
                     CustomIconButton(
@@ -286,7 +286,7 @@ class _PostListPageState extends ConsumerState<PostListPage> {
                         Navigator.pushNamed(context, '/post_create');
                       },
                       tooltip: '게시물 작성',
-                      isLarge: true,
+                      isLarge: true, iconColor: null,
                     ),
                     const SizedBox(height: 12),
                   ],
