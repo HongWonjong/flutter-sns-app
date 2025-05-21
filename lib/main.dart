@@ -24,7 +24,7 @@ void main() async {
   );
 
   // 테스트용 에러 전송 (완료되면 제거 가능)
-  await Sentry.captureException(StateError('This is a sample exception.'));
+  //await Sentry.captureException(StateError('This is a sample exception.'));
 }
 
 class MyApp extends StatelessWidget {
