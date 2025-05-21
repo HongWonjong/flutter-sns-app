@@ -23,6 +23,7 @@ class CreatePostUseCase {
         tags: tags,
         imageUrl: imageUrl,
         createdAt: DateTime.now(),
+        likes: [],
       );
 
       await _repository.createPost(post);

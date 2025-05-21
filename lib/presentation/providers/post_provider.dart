@@ -90,6 +90,33 @@ class PostProvider extends StateNotifier<List<Post>> {
     _hasMoreSearch = true;
     await fetchPosts();
   }
+  Future<void> likePost(String postId, String deviceId) async {
+    final docRef = FirebaseFirestore.instance.collection('posts').doc(postId);
+    await docRef.update({
+      'likes': FieldValue.arrayUnion([deviceId]),
+    });
+    state = [
+      for (final post in state)
+        if (post.postId == postId)
+          post.copyWith(likes: [...post.likes, deviceId])
+        else
+          post
+    ];
+  }
+
+  Future<void> unlikePost(String postId, String deviceId) async {
+    final docRef = FirebaseFirestore.instance.collection('posts').doc(postId);
+    await docRef.update({
+      'likes': FieldValue.arrayRemove([deviceId]),
+    });
+    state = [
+      for (final post in state)
+        if (post.postId == postId)
+          post.copyWith(likes: post.likes.where((id) => id != deviceId).toList())
+        else
+          post
+    ];
+  }
 
   Future<DocumentSnapshot?> _getLastDocument(List<Post> posts) async {
     if (posts.isEmpty) return null;
