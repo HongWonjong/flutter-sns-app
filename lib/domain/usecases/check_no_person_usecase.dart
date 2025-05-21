@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../data/datasources/tflite_object_detector.dart';
-import '../../data/repositories/object_detection_repository.dart';
+import '../repositories/object_detection_repository.dart';
 
 class CheckNoPersonUseCase {
   final ObjectDetectionRepository _repository;
