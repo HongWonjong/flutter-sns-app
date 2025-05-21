@@ -232,8 +232,8 @@ class _PostListPageState extends ConsumerState<PostListPage> {
                 ],
               ),
               Positioned(
-                top: 16,
-                left: 16,
+                top: 24,
+                right: 16,
                 child: Column(
                   children: [
                     CustomIconButton(
