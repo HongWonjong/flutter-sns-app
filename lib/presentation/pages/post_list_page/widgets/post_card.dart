@@ -44,8 +44,7 @@ class PostCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       height: cardHeight,
-      decoration: BoxDecoration(
-      ),
+      decoration: BoxDecoration(),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -112,23 +111,64 @@ class PostCard extends ConsumerWidget {
             right: 8,
             child: Row(
               children: [
-                Container(
-                  padding: AppStyles.iconPadding,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: AppStyles.defaultShadow,
-                  ),
-                  child: FutureBuilder<bool>(
-                    future: _isPostLiked(post.postId),
-                    builder: (context, snapshot) {
-                      final isLiked = snapshot.data ?? false;
-                      return CustomIconButton(
-                        icon: isLiked ? Icons.favorite : Icons.favorite_border,
-                        iconColor: isLiked ? Colors.red : AppStyles.iconColor,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: AppStyles.iconPadding,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: AppStyles.defaultShadow,
+                      ),
+                      child: FutureBuilder<bool>(
+                        future: _isPostLiked(post.postId),
+                        builder: (context, snapshot) {
+                          final isLiked = snapshot.data ?? false;
+                          return CustomIconButton(
+                            icon: isLiked ? Icons.favorite : Icons.favorite_border,
+                            iconColor: isLiked ? Colors.red : AppStyles.iconColor,
+                            isLarge: false,
+                            onPressed: () async {
+                              if (post.postId.isNotEmpty) {
+                                await _toggleLike(context, ref, post.postId);
+                              } else {
+                                print('Invalid postId: ${post.postId}');
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Invalid postId')),
+                                );
+                              }
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    Text(
+                      "342",
+                      style: AppStyles.likeCommentCountStyle,
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: AppStyles.iconPadding,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: AppStyles.defaultShadow,
+                      ),
+                      child: CustomIconButton(
+                        icon: Icons.comment,
                         isLarge: false,
-                        onPressed: () async {
+                        onPressed: () {
                           if (post.postId.isNotEmpty) {
-                            await _toggleLike(context, ref, post.postId);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CommentPage(postId: post.postId),
+                              ),
+                            );
                           } else {
                             print('Invalid postId: ${post.postId}');
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -136,36 +176,14 @@ class PostCard extends ConsumerWidget {
                             );
                           }
                         },
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  padding: AppStyles.iconPadding,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: AppStyles.defaultShadow,
-                  ),
-                  child: CustomIconButton(
-                    icon: Icons.comment,
-                    isLarge: false,
-                    onPressed: () {
-                      if (post.postId.isNotEmpty) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CommentPage(postId: post.postId),
-                          ),
-                        );
-                      } else {
-                        print('Invalid postId: ${post.postId}');
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Invalid postId')),
-                        );
-                      }
-                    }, iconColor: null,
-                  ),
+                        iconColor: null,
+                      ),
+                    ),
+                    Text(
+                      "342",
+                      style: AppStyles.likeCommentCountStyle,
+                    ),
+                  ],
                 ),
               ],
             ),
