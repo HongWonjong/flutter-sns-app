@@ -34,4 +34,15 @@ class PostRepositoryImpl implements PostRepository {
     );
     await _dataSource.createPost(dto);
   }
+  @override
+  Future<List<Post>> searchPostsByTag(String tag, int limit, DocumentSnapshot? startAfter) async {
+    final dtos = await _dataSource.searchPostsByTag(tag, limit, startAfter);
+    return dtos.map((dto) => Post(
+      postId: dto.postId,
+      imageUrl: dto.imageUrl,
+      text: dto.text,
+      tags: dto.tags,
+      createdAt: dto.createdAt,
+    )).toList();
+  }
 }

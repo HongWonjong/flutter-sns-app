@@ -6,7 +6,6 @@ import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/icon_b
 import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/post_card.dart';
 import 'package:flutter_sns_app/presentation/providers/post_provider.dart';
 
-
 class PostListPage extends ConsumerStatefulWidget {
   const PostListPage({super.key});
 
@@ -18,6 +17,8 @@ class _PostListPageState extends ConsumerState<PostListPage> {
   final ScrollController _scrollController = ScrollController();
   bool _isLoadingMore = false;
   String? _errorMessage;
+  bool _isSearchingByTag = false;
+  String? _currentTag;
 
   @override
   void initState() {
@@ -42,7 +43,11 @@ class _PostListPageState extends ConsumerState<PostListPage> {
       _errorMessage = null;
     });
     try {
-      await ref.read(postProvider.notifier).fetchPosts();
+      if (_isSearchingByTag && _currentTag != null) {
+        await ref.read(postProvider.notifier).searchPostsByTag(_currentTag!);
+      } else {
+        await ref.read(postProvider.notifier).fetchPosts();
+      }
     } catch (e) {
       setState(() {
         _errorMessage = '게시물 로드 실패: $e';
@@ -52,6 +57,88 @@ class _PostListPageState extends ConsumerState<PostListPage> {
         _isLoadingMore = false;
       });
     }
+  }
+
+  Future<void> _searchPostsByTag(String tag) async {
+    setState(() {
+      _isLoadingMore = true;
+      _errorMessage = null;
+      _isSearchingByTag = true;
+      _currentTag = tag;
+    });
+    try {
+      ref.read(postProvider.notifier).state = []; // 검색 전 상태 초기화
+      await ref.read(postProvider.notifier).searchPostsByTag(tag);
+    } catch (e) {
+      setState(() {
+        _errorMessage = '태그 검색 실패: $e';
+      });
+    } finally {
+      setState(() {
+        _isLoadingMore = false;
+      });
+    }
+  }
+
+  Future<void> _cancelSearch() async {
+    setState(() {
+      _isLoadingMore = true;
+      _errorMessage = null;
+      _isSearchingByTag = false;
+      _currentTag = null;
+    });
+    try {
+      await ref.read(postProvider.notifier).resetSearch();
+    } catch (e) {
+      setState(() {
+        _errorMessage = '게시물 로드 실패: $e';
+      });
+    } finally {
+      setState(() {
+        _isLoadingMore = false;
+      });
+    }
+  }
+
+  Future<void> _showSearchDialog(BuildContext context) async {
+    String? tag;
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('태그 검색'),
+          content: TextField(
+            onChanged: (value) {
+              tag = value;
+            },
+            decoration: const InputDecoration(hintText: '태그를 입력하세요 (예: #감정)'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('취소'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (tag != null && tag!.isNotEmpty) {
+                  if (!tag!.startsWith('#')) {
+                    tag = '#$tag';
+                  }
+                  Navigator.of(context).pop(tag);
+                }
+              },
+              child: const Text('검색'),
+            ),
+          ],
+        );
+      },
+    ).then((value) {
+      if (value != null) {
+        _searchPostsByTag(value);
+      }
+    });
   }
 
   @override
@@ -96,9 +183,9 @@ class _PostListPageState extends ConsumerState<PostListPage> {
                     ),
                   ),
                 if (posts.isEmpty && !_isLoadingMore && _errorMessage == null)
-                  const SliverToBoxAdapter(
+                  SliverToBoxAdapter(
                     child: Center(
-                      child: Text('게시물이 없습니다.'),
+                      child: Text(_isSearchingByTag ? '검색 결과가 없습니다.' : '게시물이 없습니다.'),
                     ),
                   ),
                 SliverList(
@@ -147,12 +234,15 @@ class _PostListPageState extends ConsumerState<PostListPage> {
                   CustomIconButton(
                     icon: Icons.search,
                     onPressed: () {
-                      // TODO: 검색 기능 구현
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('검색 기능 준비 중')),
-                      );
+                      if (_isSearchingByTag) {
+                        _cancelSearch();
+                      } else {
+                        _showSearchDialog(context);
+                      }
                     },
-                    tooltip: '검색',
+                    tooltip: _isSearchingByTag ? '검색 취소' : '검색',
+                    backgroundColor: _isSearchingByTag ? AppStyles.searchActiveBackgroundColor : null,
+                    isLarge: true,
                   ),
                   const SizedBox(height: 12),
                   CustomIconButton(
@@ -161,6 +251,7 @@ class _PostListPageState extends ConsumerState<PostListPage> {
                       Navigator.pushNamed(context, '/post_create');
                     },
                     tooltip: '게시물 작성',
+                    isLarge: true,
                   ),
                   const SizedBox(height: 12),
                 ],

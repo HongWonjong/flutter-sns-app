@@ -12,8 +12,9 @@ class AppStyles {
   static const Color dividerColor = Colors.black;
   static const Color iconBackgroundColor = Colors.white;
   static const Color overlayBackgroundColor = Colors.transparent;
+  static const Color searchActiveBackgroundColor = Colors.blue; // 추가: 검색 중 배경색
 
-// 크기
+  // 크기
   static const double cardBorderRadius = 12.0;
   static const double iconSizeSmall = 24.0;
   static const double iconSizeLarge = 40.0;
