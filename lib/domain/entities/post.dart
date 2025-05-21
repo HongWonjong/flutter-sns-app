@@ -4,6 +4,7 @@ class Post {
   final String text; // 게시물 내용, 최대 200자
   final List<String> tags; // 게시물 분류용 해시태그 리스트
   final DateTime createdAt; // 작성 시간, ISO 8601 형식
+  final List<String> likes; // 좋아요한 디바이스 ID 리스트
 
   Post({
     required this.postId,
@@ -11,5 +12,24 @@ class Post {
     required this.text,
     required this.tags,
     required this.createdAt,
+    required this.likes,
   });
+
+  Post copyWith({
+    String? postId,
+    String? imageUrl,
+    String? text,
+    List<String>? tags,
+    DateTime? createdAt,
+    List<String>? likes,
+  }) {
+    return Post(
+      postId: postId ?? this.postId,
+      imageUrl: imageUrl ?? this.imageUrl,
+      text: text ?? this.text,
+      tags: tags ?? this.tags,
+      createdAt: createdAt ?? this.createdAt,
+      likes: likes ?? this.likes,
+    );
+  }
 }

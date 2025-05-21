@@ -20,7 +20,17 @@ class PostRepositoryImpl implements PostRepository {
       text: dto.text,
       tags: dto.tags,
       createdAt: dto.createdAt,
+      likes: [],
     )).toList();
+  }
+
+  @override
+  Future<int> getCommentCount(String postId) async {
+    return await _dataSource.getCommentCount(postId);
+  }
+
+  Future<int> getLikesCount(String postId) async {
+    return await _dataSource.getLikesCount(postId);
   }
 
   @override
@@ -43,6 +53,7 @@ class PostRepositoryImpl implements PostRepository {
       text: dto.text,
       tags: dto.tags,
       createdAt: dto.createdAt,
+      likes: [],
     )).toList();
   }
 }

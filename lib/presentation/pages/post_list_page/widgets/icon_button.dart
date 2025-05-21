@@ -6,7 +6,8 @@ class CustomIconButton extends StatefulWidget {
   final VoidCallback? onPressed;
   final String? tooltip;
   final bool isLarge;
-  final Color? backgroundColor; // 추가: 배경색 속성
+  final Color? backgroundColor;
+  final Color? iconColor;
 
   const CustomIconButton({
     super.key,
@@ -15,14 +16,14 @@ class CustomIconButton extends StatefulWidget {
     this.tooltip,
     this.isLarge = true,
     this.backgroundColor,
+    this.iconColor,
   });
 
   @override
   _CustomIconButtonState createState() => _CustomIconButtonState();
 }
 
-class _CustomIconButtonState extends State<CustomIconButton>
-    with SingleTickerProviderStateMixin {
+class _CustomIconButtonState extends State<CustomIconButton> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -75,7 +76,7 @@ class _CustomIconButtonState extends State<CustomIconButton>
               icon: Icon(
                 widget.icon,
                 size: iconSize,
-                color: AppStyles.iconColor,
+                color: widget.iconColor ?? AppStyles.iconColor,
               ),
               onPressed: widget.onPressed,
               tooltip: widget.tooltip,
