@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sns_app/core/firebase_analytics_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_sns_app/domain/usecases/create_post_usecase.dart';
 import 'package:uuid/uuid.dart';
@@ -52,13 +53,7 @@ class PostCreateViewModel extends StateNotifier<PostCreateState> {
   void addTag(String tag) {
     if (tag.isNotEmpty) {
       state = state.copyWith(
-        tags: [
-          ...state.tags,
-          Tag(
-            id: Uuid().v4(),
-            text: tag
-          ),
-        ],
+        tags: [...state.tags, Tag(id: Uuid().v4(), text: tag)],
       );
     }
   }
@@ -84,11 +79,18 @@ class PostCreateViewModel extends StateNotifier<PostCreateState> {
     state = state.copyWith(isLoading: true);
     try {
       final imageFile = File(state.image!.path);
-      await _createPostUseCase.execute(
+      final post = await _createPostUseCase.execute(
         imageFile: imageFile,
         text: state.text,
         tags: state.tags.map((tag) => tag.text).toList(),
       );
+
+      FirebaseAnalyticsService.logPostCreated(
+        postId: post.postId,
+        textLength: state.text.length,
+        hasImage: true,
+      );
+
       state = PostCreateState(); // 업로드 후 상태 초기화
     } catch (e) {
       state = state.copyWith(isLoading: false);
