@@ -3,6 +3,17 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 class FirebaseAnalyticsService {
   static final FirebaseAnalytics instance = FirebaseAnalytics.instance;
 
+  static Future<void> logCommentCreated({
+  required String postId,
+}) async {
+  await instance.logEvent(
+    name: 'comment_created',
+    parameters: {
+      'post_id': postId,
+    },
+  );
+}
+
 //   static Future<void> logCommentCreated({
 //     required String postId,
 //     required int commentLength,
