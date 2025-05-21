@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/domain/entities/post.dart';
 import 'package:flutter_sns_app/presentation/constants/app_styles.dart';
+import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/end_of_posts_message.dart';
 import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/icon_button.dart';
 import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/post_card.dart';
 import 'package:flutter_sns_app/presentation/providers/post_provider.dart';
@@ -217,6 +218,7 @@ class _PostListPageState extends ConsumerState<PostListPage> {
                                   child: PostCard(
                                     post: posts[index],
                                     cardHeight: cardHeight,
+                                    onTagTap: _searchPostsByTag,
                                   ),
                                 ),
                               ),
@@ -244,6 +246,10 @@ class _PostListPageState extends ConsumerState<PostListPage> {
                       childCount: posts.length,
                     ),
                   ),
+                  if (posts.isNotEmpty && !_isLoadingMore && _errorMessage == null)
+                    const SliverToBoxAdapter(
+                      child: EndOfPostsMessage(),
+                    ),
                   if (_isLoadingMore)
                     SliverToBoxAdapter(
                       child: Center(
