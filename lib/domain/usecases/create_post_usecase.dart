@@ -10,21 +10,22 @@ class CreatePostUseCase {
 
   CreatePostUseCase(this._repository, this._storageRepository);
 
-  Future<void> execute({
+  Future<Post> execute({
     required imageFile,
     required text,
     required List<String> tags,
   }) async {
     final postId = Uuid().v4();
     final imageUrl = await _storageRepository.uploadImage(postId, imageFile);
-    return _repository.createPost(
-      Post(
+    final post = Post(
         postId: postId,
         text: text,
         tags: tags,
         imageUrl: imageUrl,
         createdAt: DateTime.now(),
-      ),
-    );
+      );
+
+      await _repository.createPost(post);
+      return post;
   }
 }

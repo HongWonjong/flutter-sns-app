@@ -3,6 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 class FirebaseAnalyticsService {
   static final FirebaseAnalytics instance = FirebaseAnalytics.instance;
 
+// 댓글 작성시 이벤트 로깅
   static Future<void> logCommentCreated({
   required String postId,
 }) async {
@@ -13,6 +14,23 @@ class FirebaseAnalyticsService {
     },
   );
 }
+
+//게시물 작성시 이벤트 로깅
+static Future<void> logPostCreated({
+  required String postId,
+  required int textLength,
+  required bool hasImage,
+}) async {
+  await instance.logEvent(
+    name: 'post_created',
+    parameters: {
+      'post_id': postId,
+      'text_length': textLength,
+      'has_image': hasImage,
+    },
+  );
+}
+
 
 //   static Future<void> logCommentCreated({
 //     required String postId,
