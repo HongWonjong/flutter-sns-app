@@ -1,1 +1,0 @@
-// Firebase 초기화 설정 (Firebase.initializeApp 호출)

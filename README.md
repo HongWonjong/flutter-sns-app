@@ -17,6 +17,7 @@
   "postId": "post1", // Firestore 문서 ID, 실제로는 uuid
   "imageUrl": "https://firebasestorage.googleapis.com/v0/b/your-app.appspot.com/o/images%2Fpost1%2Fpost1.jpg?alt=media",
   "text": "난..오늘도 눈물을 흘린 다.",
+  "likes" : ["22a60b89-8c5b-471f-b5b9-dc63786cdae9", "78a60b64-8c5b-471f-b5b9-dc63786cdae9"], // shared_preference로 발급한 디바이스 고유 uuid
   "tags": ["#태그명", "#감정"], // 태그 리스트, List<String> 형식
   "createdAt": "2025-05-16T15:22:00+09:00"
 }
@@ -26,6 +27,7 @@
   "postId": "post2", // Firestore 문서 ID, 실제로는 uuid
   "imageUrl": "https://firebasestorage.googleapis.com/v0/b/your-app.appspot.com/o/images%2Fpost2%2Fpost2.jpg?alt=media",
   "text": "슬픔을 느낄 수 있다는 건 좋은거야..",
+  "likes" : [],
   "tags": ["#태그명", "#감정"], // 태그 리스트, List<String> 형식
   "createdAt": "2025-05-16T15:23:00+09:00"
 }

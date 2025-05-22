@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sns_app/core/firebase_analytics_service.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/comment.dart';
 import '../providers/comment_provider.dart';
@@ -36,6 +37,8 @@ class _CommentPageState extends ConsumerState<CommentPage> {
 
     ref.read(commentProvider(widget.postId).notifier).createComment(newComment);
     _controller.clear();
+
+      FirebaseAnalyticsService.logCommentCreated(postId: widget.postId);
   }
 
   String _formatDate(DateTime dt) {

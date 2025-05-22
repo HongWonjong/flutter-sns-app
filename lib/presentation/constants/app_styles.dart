@@ -71,6 +71,23 @@ class AppStyles {
       ),
     ],
   );
+  static final TextStyle likeCommentCountStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 22,
+    fontWeight: FontWeight.bold,
+    shadows: [
+      Shadow(
+        color: Colors.black87,
+        blurRadius: 4.0,
+        offset: Offset(1, 1),
+      ),
+      Shadow(
+        color: Colors.black87,
+        blurRadius: 4.0,
+        offset: Offset(-1, -1),
+      ),
+    ],
+  );
 
   static const List<BoxShadow> defaultShadow = [
     BoxShadow(

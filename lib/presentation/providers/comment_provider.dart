@@ -7,6 +7,8 @@ import 'package:flutter_sns_app/domain/usecases/get_comments_usecase.dart';
 import '../../data/datasources/comment_remote_datasource.dart';
 import '../../data/repositories/comment_repository_impl.dart';
 import '../../domain/repositories/comment_repository.dart';
+import 'create_comment_usecase_provider.dart';
+import 'get_comment_usecase_provider.dart';
 
 class CommentProvider extends StateNotifier<List<Comment>> {
   final GetCommentsUseCase _getCommentsUseCase;
@@ -32,18 +34,3 @@ final commentProvider = StateNotifierProvider.family<CommentProvider, List<Comme
   return CommentProvider(getCommentsUseCase, createCommentUseCase, postId);
 });
 
-final getCommentsUseCaseProvider = Provider<GetCommentsUseCase>((ref) {
-  return GetCommentsUseCase(ref.watch(commentRepositoryProvider));
-});
-
-final createCommentUseCaseProvider = Provider<CreateCommentUseCase>((ref) {
-  return CreateCommentUseCase(ref.watch(commentRepositoryProvider));
-});
-
-final commentRepositoryProvider = Provider<CommentRepository>((ref) {
-  return CommentRepositoryImpl(ref.watch(commentRemoteDataSourceProvider));
-});
-
-final commentRemoteDataSourceProvider = Provider<CommentRemoteDataSource>((ref) {
-  return CommentRemoteDataSource();
-});
