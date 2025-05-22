@@ -1,7 +1,7 @@
 name: flutter_sns_app
 description: "A new Flutter project."
 
-publish_to: 'none'
+publish_to: 'none' # Remove this line if you want to publish to pub.dev
 
 version: 1.0.0+1
 
@@ -9,45 +9,40 @@ environment:
   sdk: ^3.7.0
 
 dependencies:
-  sentry_flutter: ^8.14.2
-  shared_preferences: ^2.5.3
-  shared_preferences_android: ^2.4.10
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.6.1
-  google_fonts: ^6.2.1
   firebase_core: ^3.13.0
+  firebase_analytics: ^11.0.0
+  cloud_firestore: ^5.6.7
+  firebase_storage: ^12.4.5
+  sentry_flutter: ^8.14.2
   image: ^4.5.4
   path_provider: ^2.1.5
-  cloud_firestore: ^5.6.7
   uuid: ^4.5.1
   intl: ^0.20.2
-  firebase_storage: ^12.4.5
   tflite_flutter: ^0.11.0
   cupertino_icons: ^1.0.8
-  firebase_analytics: ^11.4.5
-  go_router: ^15.1.2
-  image_picker: ^1.1.2
+  shared_preferences: ^2.0.15
+  image_picker: ^0.8.7+5
+  google_fonts: ^5.0.0
   yolo_helper:
     git:
       url: https://github.com/fhelper/flutter-yolo-helper.git
       ref: main
 
 dev_dependencies:
-  sentry_dart_plugin: ^2.4.1
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^5.0.0
+  sentry_dart_plugin: ^2.4.1
 
 flutter:
-
   uses-material-design: true
 
   assets:
-    - assets/images/splash.gif
-    - assets/yolov8n.tflite
-    - assets/labels.txt
+    - assets/images/background.png
+    - assets/images/icon.png
 
 sentry:
   upload_debug_symbols: true
