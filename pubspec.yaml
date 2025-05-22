@@ -10,9 +10,12 @@ environment:
 
 dependencies:
   sentry_flutter: ^8.14.2
+  shared_preferences: ^2.5.3
+  shared_preferences_android: ^2.4.10
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.6.1
+  google_fonts: ^6.2.1
   firebase_core: ^3.13.0
   path_provider: ^2.1.5
   cloud_firestore: ^5.6.7
@@ -25,6 +28,10 @@ dependencies:
   go_router: ^15.1.2
   image_picker: ^1.1.2
   flutter_image_filters: ^0.0.26
+  yolo_helper:
+    git:
+      url: https://github.com/fhelper/flutter-yolo-helper.git
+      ref: main
 
 dev_dependencies:
   sentry_dart_plugin: ^2.4.1
@@ -39,6 +46,8 @@ flutter:
 
   assets:
     - assets/images/splash.gif
+    - assets/yolov8n.tflite
+    - assets/labels.txt
 
 sentry:
   upload_debug_symbols: true

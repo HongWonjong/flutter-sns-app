@@ -20,7 +20,17 @@ class PostRepositoryImpl implements PostRepository {
       text: dto.text,
       tags: dto.tags,
       createdAt: dto.createdAt,
+      likes: [],
     )).toList();
+  }
+
+  @override
+  Future<int> getCommentCount(String postId) async {
+    return await _dataSource.getCommentCount(postId);
+  }
+
+  Future<int> getLikesCount(String postId) async {
+    return await _dataSource.getLikesCount(postId);
   }
 
   @override
@@ -33,5 +43,17 @@ class PostRepositoryImpl implements PostRepository {
       createdAt: post.createdAt,
     );
     await _dataSource.createPost(dto);
+  }
+  @override
+  Future<List<Post>> searchPostsByTag(String tag, int limit, DocumentSnapshot? startAfter) async {
+    final dtos = await _dataSource.searchPostsByTag(tag, limit, startAfter);
+    return dtos.map((dto) => Post(
+      postId: dto.postId,
+      imageUrl: dto.imageUrl,
+      text: dto.text,
+      tags: dto.tags,
+      createdAt: dto.createdAt,
+      likes: [],
+    )).toList();
   }
 }

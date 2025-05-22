@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppStyles {
-  // 색상
   static const Color backgroundColor = Colors.grey;
   static const Color cardBackgroundColor = Color(0xFFE0E0E0);
-  static const Color tagBackgroundColor = Color(0x42D3D3D3);
+  static const Color tagBackgroundColor = Color(0xFFFFFFFF);
   static const Color tagTextColor = Colors.black;
   static const Color iconColor = Colors.black;
   static const Color shadowColor = Colors.black26;
@@ -12,14 +12,18 @@ class AppStyles {
   static const Color dividerColor = Colors.black;
   static const Color iconBackgroundColor = Colors.white;
   static const Color overlayBackgroundColor = Colors.transparent;
+  static const Color searchActiveBackgroundColor = Colors.blue;
+  static const Color dividerGradientStart = Color(0xFFBBBBBB);
+  static const Color dividerGradientEnd = Color(0xFF888888);
+  static const Color listBackgroundGradientStart = Color(0xFFF5F5F5);
+  static const Color listBackgroundGradientEnd = Color(0xFFE0E0E0);
 
-// 크기
   static const double cardBorderRadius = 12.0;
   static const double iconSizeSmall = 24.0;
   static const double iconSizeLarge = 40.0;
   static const double chipPaddingHorizontal = 4.0;
   static const double chipSpacing = 8.0;
-  static const double dividerThickness = 1.0;
+  static const double dividerThickness = 0.5;
   static const double iconButtonSize = 64.0;
   static const double iconButtonSizeSmall = 48.0;
   static const double overlayHeightRatio = 0.8;
@@ -29,8 +33,8 @@ class AppStyles {
   static const double maxOverlayFontSize = 48.0;
   static const double splashRadiusLarge = 20.0;
   static const double splashRadiusSmall = 16.0;
+  static const double cardSpacing = 8.0;
 
-  // 패딩
   static const EdgeInsets pagePadding = EdgeInsets.all(16.0);
   static const EdgeInsets cardPadding = EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0);
   static const EdgeInsets contentPadding = EdgeInsets.all(12.0);
@@ -39,19 +43,19 @@ class AppStyles {
   static const EdgeInsets iconPaddingSmall = EdgeInsets.all(2.0);
   static const EdgeInsets overlayTextPadding = EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0);
 
-  // 텍스트 스타일
-  static const TextStyle titleStyle = TextStyle(
+  static final TextStyle titleStyle = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
   );
-  static const TextStyle bodyStyle = TextStyle(
+  static final TextStyle bodyStyle = TextStyle(
     fontSize: 16,
   );
-  static const TextStyle tagStyle = TextStyle(
+  static final TextStyle tagStyle = GoogleFonts.sunflower(
     color: tagTextColor,
-    fontSize: 16,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
   );
-  static const TextStyle overlayTextStyle = TextStyle(
+  static final TextStyle overlayTextStyle = TextStyle(
     color: Colors.white,
     fontWeight: FontWeight.bold,
     shadows: [
@@ -67,8 +71,24 @@ class AppStyles {
       ),
     ],
   );
+  static final TextStyle likeCommentCountStyle = TextStyle(
+    color: Colors.white,
+    fontSize: 22,
+    fontWeight: FontWeight.bold,
+    shadows: [
+      Shadow(
+        color: Colors.black87,
+        blurRadius: 4.0,
+        offset: Offset(1, 1),
+      ),
+      Shadow(
+        color: Colors.black87,
+        blurRadius: 4.0,
+        offset: Offset(-1, -1),
+      ),
+    ],
+  );
 
-  // 그림자
   static const List<BoxShadow> defaultShadow = [
     BoxShadow(
       color: shadowColor,
@@ -78,7 +98,15 @@ class AppStyles {
     ),
   ];
 
-  // 테두리
+  static const List<BoxShadow> dividerShadow = [
+    BoxShadow(
+      color: shadowColor,
+      blurRadius: 2.0,
+      offset: Offset(0, 1),
+      spreadRadius: 0.5,
+    ),
+  ];
+
   static const Border iconBorder = Border(
     top: BorderSide(color: dividerColor, width: 1.5),
     bottom: BorderSide(color: dividerColor, width: 1.5),
@@ -86,7 +114,7 @@ class AppStyles {
     right: BorderSide(color: dividerColor, width: 1.5),
   );
 
-  // 애니메이션
   static const Duration animationDuration = Duration(milliseconds: 200);
   static const Curve animationCurve = Curves.easeInOut;
+  static const Duration cardAnimationDuration = Duration(milliseconds: 300);
 }

@@ -8,6 +8,16 @@ class PostRemoteDataSource {
 
   PostRemoteDataSource() : _firestore = FirebaseFirestoreService().firestore;
 
+  Future<int> getCommentCount(String postId) async {
+    final snapshot = await _firestore.collection('posts').doc(postId).collection('comments').get();
+    return snapshot.docs.length;
+  }
+
+  Future<int> getLikesCount(String postId) async {
+    final snapshot = await _firestore.collection('posts').doc(postId).get();
+    return (snapshot.data()?['likes'] as List<dynamic>).length;
+  }
+
   Future<List<PostDto>> getPosts(int limit, DocumentSnapshot? startAfter) async {
     Query query = _firestore.collection('posts').orderBy('createdAt', descending: true).limit(limit);
     if (startAfter != null) {
@@ -19,5 +29,16 @@ class PostRemoteDataSource {
 
   Future<void> createPost(PostDto post) async {
     await _firestore.collection('posts').doc(post.postId).set(post.toFirestore());
+  }
+  Future<List<PostDto>> searchPostsByTag(String tag, int limit, DocumentSnapshot? startAfter) async {
+    Query query = _firestore.collection('posts')
+        .where('tags', arrayContains: tag)
+        .orderBy('createdAt', descending: true)
+        .limit(limit);
+    if (startAfter != null) {
+      query = query.startAfterDocument(startAfter);
+    }
+    final snapshot = await query.get();
+    return snapshot.docs.map((doc) => PostDto.fromFirestore(doc)).toList();
   }
 }
