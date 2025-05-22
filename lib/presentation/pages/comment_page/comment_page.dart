@@ -72,7 +72,7 @@ class _CommentPageState extends ConsumerState<CommentPage> {
                       backgroundColor: Colors.transparent,
                       builder:
                           (context) => FractionallySizedBox(
-                            heightFactor: 0.5,
+                            heightFactor: 0.8,
                             child: SubCommentPage(parentComment: comment),
                           ),
                       shape: const RoundedRectangleBorder(

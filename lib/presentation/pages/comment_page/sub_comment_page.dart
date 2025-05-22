@@ -61,8 +61,9 @@ class _SubCommentPageState extends State<SubCommentPage> {
           ),
           const Divider(height: 1),
           Expanded(
-            child: ListView.builder(
+            child: ListView.separated(
               itemCount: _subComments.length,
+              separatorBuilder: (_, __) => Divider(height: 1, color: Colors.grey.shade300),
               itemBuilder: (_, index) {
                 final reply = _subComments[index];
                 return Padding(
