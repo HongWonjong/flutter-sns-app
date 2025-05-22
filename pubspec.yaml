@@ -41,8 +41,8 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/splash.gif
-    - assets/images/icon1.png
+    - assets/images/background.png
+    - assets/images/icon.png
 
 sentry:
   upload_debug_symbols: true
