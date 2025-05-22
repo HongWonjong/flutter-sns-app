@@ -73,7 +73,10 @@ class _CommentPageState extends ConsumerState<CommentPage> {
                       builder:
                           (context) => FractionallySizedBox(
                             heightFactor: 0.8,
-                            child: SubCommentPage(parentComment: comment),
+                            child: SubCommentPage(
+                              postId: widget.postId,
+                              parentComment: comment,
+                            ),
                           ),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.vertical(
