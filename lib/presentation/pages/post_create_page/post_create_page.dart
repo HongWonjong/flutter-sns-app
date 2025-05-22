@@ -19,9 +19,7 @@ class PostCreatePage extends ConsumerWidget {
       },
       behavior: HitTestBehavior.translucent,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Post Create Page'),
-        ),
+        appBar: AppBar(title: const Text('Post Create Page')),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Form(
@@ -45,26 +43,34 @@ class PostCreatePage extends ConsumerWidget {
                   AddImageWidget(),
                   const SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: postState.isLoading
-                        ? null
-                        : () async {
-                      try {
-                        await postCreateVM.createPost();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('게시물이 업로드되었습니다.')),
-                        );
-                        Navigator.pop(context); // 업로드 후 페이지 닫기
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('$e')),
-                        );
-                      }
-                    },
-                    child: postState.isLoading
-                        ? const CircularProgressIndicator()
-                        : const Text('게시'),
+                    onPressed:
+                        postState.isLoading
+                            ? null
+                            : () async {
+                              try {
+                                // await postCreateVM.createPost();
+                                // ScaffoldMessenger.of(context).showSnackBar(
+                                //   const SnackBar(
+                                //     content: Text('게시물이 업로드되었습니다.'),
+                                //   ),
+                                // );
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => const PostPreviewWidget(),
+                                  ),
+                                );
+                              } catch (e) {
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).showSnackBar(SnackBar(content: Text('$e')));
+                              }
+                            },
+                    child:
+                        postState.isLoading
+                            ? const CircularProgressIndicator()
+                            : const Text('세부 설정으로'),
                   ),
-                  PostPreviewWidget(),
                 ],
               ),
             ),

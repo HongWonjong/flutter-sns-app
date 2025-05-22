@@ -32,6 +32,7 @@ dependencies:
     git:
       url: https://github.com/fhelper/flutter-yolo-helper.git
       ref: main
+  image: ^4.5.4
 
 dev_dependencies:
   sentry_dart_plugin: ^2.4.1

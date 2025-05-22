@@ -9,7 +9,9 @@ import 'package:uuid/uuid.dart';
 import '../../../../domain/entities/tag.dart';
 import '../../../providers/post_provider.dart';
 
-
+class PostSettings{
+  
+}
 
 class PostCreateState {
   final String text;
