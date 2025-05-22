@@ -40,6 +40,8 @@ flutter:
 
   assets:
     - assets/images/splash.gif
+    - assets/images/icon1.png
+
 
 sentry:
   upload_debug_symbols: true

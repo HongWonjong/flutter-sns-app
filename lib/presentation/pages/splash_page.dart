@@ -149,6 +149,12 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                     );
                   }),
                 ),
+                const SizedBox(height: 30), // 애니메이션과 로고 사이 간격
+                Image.asset(
+                  'assets/images/icon1.png',
+                  width: 150,
+                  height: 150,
+                ),
               ],
             ),
           ),
