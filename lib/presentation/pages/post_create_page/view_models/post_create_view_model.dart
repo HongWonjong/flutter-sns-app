@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/core/firebase_analytics_service.dart';
+import 'package:flutter_sns_app/domain/entities/post_settings.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_sns_app/domain/usecases/create_post_usecase.dart';
 import 'package:flutter_sns_app/domain/usecases/check_no_person_usecase.dart';
@@ -10,29 +10,29 @@ import 'package:uuid/uuid.dart';
 import '../../../../domain/entities/tag.dart';
 import '../../../providers/post_provider.dart';
 
-class PostSettings {
-  final double leftPosition;
-  final double topPosition;
-  final String filterName;
+// class PostSettings {
+//   // final double leftPosition;
+//   // final double topPosition;
+//   final String filterName;
 
-  const PostSettings({
-    this.leftPosition = 0,
-    this.topPosition = 0,
-    this.filterName = 'default',
-  });
+//   const PostSettings({
+//     // this.leftPosition = 0,
+//     // this.topPosition = 0,
+//     this.filterName = 'default',
+//   });
 
-  PostSettings copyWith({
-    double? leftPosition,
-    double? topPosition,
-    String? filterName,
-  }) {
-    return PostSettings(
-      leftPosition: leftPosition ?? this.leftPosition,
-      topPosition: topPosition ?? this.topPosition,
-      filterName: filterName ?? this.filterName,
-    );
-  }
-}
+//   PostSettings copyWith({
+//     // double? leftPosition,
+//     // double? topPosition,
+//     String? filterName,
+//   }) {
+//     return PostSettings(
+//       // leftPosition: leftPosition ?? this.leftPosition,
+//       // topPosition: topPosition ?? this.topPosition,
+//       filterName: filterName ?? this.filterName,
+//     );
+//   }
+// }
 
 class PostCreateState {
   final String text;
@@ -109,14 +109,14 @@ class PostCreateViewModel extends StateNotifier<PostCreateState> {
     );
   }
 
-  void onPositionChanged(Offset offset) {
-    state = state.copyWith(
-      postSettings: state.postSettings.copyWith(
-        leftPosition: offset.dx,
-        topPosition: offset.dy,
-      )
-    );
-  }
+  // void onPositionChanged(Offset offset) {
+  //   state = state.copyWith(
+  //     postSettings: state.postSettings.copyWith(
+  //       leftPosition: offset.dx,
+  //       topPosition: offset.dy,
+  //     )
+  //   );
+  // }
 
   Future<void> createPost() async {
     if (state.image == null || state.text.isEmpty) {
@@ -129,6 +129,7 @@ class PostCreateViewModel extends StateNotifier<PostCreateState> {
       final post = await _createPostUseCase.execute(
         imageFile: imageFile,
         text: state.text,
+        postSettings: state.postSettings,
         tags: state.tags.map((tag) => tag.text).toList(),
       );
 

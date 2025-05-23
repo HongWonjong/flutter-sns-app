@@ -47,7 +47,7 @@ class PostCreatePage extends ConsumerWidget {
                           : PostPreviewWidget(
                             image: postState.image!,
                             text: postState.text,
-                            onPositionChanged: postCreateVM.onPositionChanged,
+                            // onPositionChanged: postCreateVM.onPositionChanged,
                             onFilterChanged: postCreateVM.onFilterChanged,
                           );
                     },

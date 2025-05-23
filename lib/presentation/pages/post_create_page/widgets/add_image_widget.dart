@@ -16,13 +16,13 @@ class AddImageWidget extends StatelessWidget {
         final postState = ref.watch(postCreateViewModel);
         return Column(
           children: [
-            postState.image == null
-                ? const Icon(Icons.image, size: 100)
-                : Image.file(
-              File(postState.image!.path),
-              height: 200,
-              fit: BoxFit.cover,
-            ),
+            // postState.image == null
+            //     ? const Icon(Icons.image, size: 100)
+            //     : Image.file(
+            //   File(postState.image!.path),
+            //   height: 200,
+            //   fit: BoxFit.cover,
+            // ),
             ElevatedButton(
               onPressed: () async {
                 try {

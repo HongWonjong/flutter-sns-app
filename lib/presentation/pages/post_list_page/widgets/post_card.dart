@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/domain/entities/post.dart';
 import 'package:flutter_sns_app/presentation/constants/app_styles.dart';
 import 'package:flutter_sns_app/presentation/pages/comment_page.dart';
+import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/filtered_image.dart';
 import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/post_text_overlay.dart';
 import 'package:flutter_sns_app/presentation/pages/post_list_page/widgets/icon_button.dart';
 import 'package:flutter_sns_app/presentation/providers/post_provider.dart';
@@ -58,27 +59,29 @@ class PostCard extends ConsumerWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(AppStyles.cardBorderRadius),
             child: post.imageUrl.isNotEmpty
-                ? Image.network(
-              post.imageUrl,
-              height: cardHeight,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Container(
-                  height: cardHeight,
-                  color: AppStyles.backgroundColor,
-                  child: const Center(child: CircularProgressIndicator()),
-                );
-              },
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  height: cardHeight,
-                  color: AppStyles.backgroundColor,
-                  child: const Center(child: Icon(Icons.error)),
-                );
-              },
-            )
+                ? 
+            //     Image.network(
+            //   post.imageUrl,
+            //   height: cardHeight,
+            //   width: double.infinity,
+            //   fit: BoxFit.cover,
+            //   loadingBuilder: (context, child, loadingProgress) {
+            //     if (loadingProgress == null) return child;
+            //     return Container(
+            //       height: cardHeight,
+            //       color: AppStyles.backgroundColor,
+            //       child: const Center(child: CircularProgressIndicator()),
+            //     );
+            //   },
+            //   errorBuilder: (context, error, stackTrace) {
+            //     return Container(
+            //       height: cardHeight,
+            //       color: AppStyles.backgroundColor,
+            //       child: const Center(child: Icon(Icons.error)),
+            //     );
+            //   },
+            // )
+            FilteredImage(imageUrl: post.imageUrl, filterName: post.postSettings.filterName)
                 : Container(
               height: cardHeight,
               color: AppStyles.backgroundColor,

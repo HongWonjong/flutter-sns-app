@@ -11,7 +11,7 @@ class PostPreviewWidget extends StatefulWidget {
   const PostPreviewWidget({
     required this.image,
     required this.text,
-    required this.onPositionChanged,
+    // required this.onPositionChanged,
     required this.onFilterChanged,
     // required this.onTextColorChanged,
     super.key,
@@ -19,7 +19,7 @@ class PostPreviewWidget extends StatefulWidget {
   final XFile image;
   final String text;
 
-  final void Function(Offset) onPositionChanged;
+  // final void Function(Offset) onPositionChanged;
   final void Function(String) onFilterChanged;
   // final void Function(String) onTextColorChanged;
 
@@ -57,12 +57,6 @@ class _PostPreviewWidgetState extends State<PostPreviewWidget> {
     setState(() {});
   }
 
-  void _updateTextColor() {
-    
-    setState(() {
-      textColor = color;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +68,7 @@ class _PostPreviewWidgetState extends State<PostPreviewWidget> {
               onTapDown: (details) {
                 setState(() {
                   textPosition = details.localPosition;
-                  widget.onPositionChanged(details.localPosition);
+                  // widget.onPositionChanged(details.localPosition);
                 });
               },
               child: Stack(
@@ -117,17 +111,17 @@ class _PostPreviewWidgetState extends State<PostPreviewWidget> {
                     );
                   }).toList(),
             ),
-            Text('글자 색'),
-            Wrap(
-              children: [
-                ...textColors.map(
-                  (color) => GestureDetector(
-                    onTap: () {},
-                    child: ChangeTextColorWidget(hexString: color),
-                  ),
-                ),
-              ],
-            ),
+          //   Text('글자 색'),
+          //   Wrap(
+          //     children: [
+          //       ...textColors.map(
+          //         (color) => GestureDetector(
+          //           onTap: () {},
+          //           child: ChangeTextColorWidget(hexString: color),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
           ],
         );
   }
