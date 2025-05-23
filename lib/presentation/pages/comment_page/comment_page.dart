@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/core/firebase_analytics_service.dart';
-import 'package:flutter_sns_app/presentation/pages/%08comment_page/sub_comment_page.dart';
+import 'package:flutter_sns_app/presentation/pages/comment_page/sub_comment_page.dart';
 import 'package:intl/intl.dart';
 import '../../../domain/entities/comment.dart';
 import '../../providers/comment_provider.dart';
