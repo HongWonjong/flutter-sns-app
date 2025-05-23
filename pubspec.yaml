@@ -37,6 +37,7 @@ dependencies:
       url: https://github.com/fhelper/flutter-yolo-helper.git
       ref: main
   image: ^4.5.4
+  http: ^1.4.0
 
 dev_dependencies:
   flutter_test:
