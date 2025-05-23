@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/core/firebase_analytics_service.dart';
+import 'package:flutter_sns_app/presentation/pages/%08comment_page/sub_comment_page.dart';
 import 'package:intl/intl.dart';
-import '../../domain/entities/comment.dart';
-import '../providers/comment_provider.dart';
+import '../../../domain/entities/comment.dart';
+import '../../providers/comment_provider.dart';
 
 class CommentPage extends ConsumerStatefulWidget {
   final String postId;
@@ -38,7 +39,7 @@ class _CommentPageState extends ConsumerState<CommentPage> {
     ref.read(commentProvider(widget.postId).notifier).createComment(newComment);
     _controller.clear();
 
-      FirebaseAnalyticsService.logCommentCreated(postId: widget.postId);
+    FirebaseAnalyticsService.logCommentCreated(postId: widget.postId);
   }
 
   String _formatDate(DateTime dt) {
@@ -63,21 +64,40 @@ class _CommentPageState extends ConsumerState<CommentPage> {
               separatorBuilder: (_, __) => Divider(),
               itemBuilder: (_, index) {
                 final comment = comments[index];
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      comment.text,
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        _formatDate(comment.createdAt),
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                return GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder:
+                          (context) => FractionallySizedBox(
+                            heightFactor: 0.8,
+                            child: SubCommentPage(
+                              postId: widget.postId,
+                              parentComment: comment,
+                            ),
+                          ),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(16),
+                        ),
                       ),
-                    )
-                  ],
+                    );
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(comment.text, style: TextStyle(fontSize: 16)),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          _formatDate(comment.createdAt),
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
@@ -103,13 +123,10 @@ class _CommentPageState extends ConsumerState<CommentPage> {
                     ),
                   ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: _submitComment,
-                ),
+                IconButton(icon: Icon(Icons.send), onPressed: _submitComment),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
