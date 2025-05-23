@@ -103,7 +103,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/splash.gif'),
+            image: AssetImage('assets/images/background.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -118,7 +118,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black87,
+                    color: Color.fromARGB(221, 255, 255, 255),
                     letterSpacing: 1.3,
                   ),
                 ),
@@ -142,12 +142,18 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                         style: const TextStyle(
                           fontSize: 54,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: Color.fromARGB(221, 255, 255, 255),
                           letterSpacing: 2.5,
                         ),
                       ),
                     );
                   }),
+                ),
+                const SizedBox(height: 30), // 애니메이션과 로고 사이 간격
+                Image.asset(
+                  'assets/images/icon.png',
+                  width: 150,
+                  height: 150,
                 ),
               ],
             ),
