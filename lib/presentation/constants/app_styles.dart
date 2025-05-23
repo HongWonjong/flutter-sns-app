@@ -50,6 +50,10 @@ class AppStyles {
   static final TextStyle bodyStyle = TextStyle(
     fontSize: 16,
   );
+
+  static final TextStyle commentStyle = TextStyle(
+    fontSize: 20,
+  );
   static final TextStyle tagStyle = GoogleFonts.sunflower(
     color: tagTextColor,
     fontSize: 20,
