@@ -1,5 +1,6 @@
 /// 게시물 작성 유스케이스 (이미지 검사 후 업로드 로직 필요)
 import 'package:flutter_sns_app/domain/entities/post.dart';
+import 'package:flutter_sns_app/domain/entities/post_settings.dart';
 import 'package:flutter_sns_app/domain/repositories/post_repository.dart';
 import 'package:flutter_sns_app/domain/repositories/storage_repository.dart';
 import 'package:uuid/uuid.dart';
@@ -14,6 +15,7 @@ class CreatePostUseCase {
     required imageFile,
     required text,
     required List<String> tags,
+    required PostSettings postSettings,
   }) async {
     final postId = Uuid().v4();
     final imageUrl = await _storageRepository.uploadImage(postId, imageFile);
@@ -23,6 +25,7 @@ class CreatePostUseCase {
         tags: tags,
         imageUrl: imageUrl,
         createdAt: DateTime.now(),
+        postSettings: postSettings,
         likes: [],
       );
 

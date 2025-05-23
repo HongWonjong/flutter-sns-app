@@ -1,5 +1,6 @@
 // lib/data/dtos/post_dto.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_sns_app/data/dtos/post_settings_dto.dart';
 
 class PostDto {
   final String postId;
@@ -7,6 +8,7 @@ class PostDto {
   final String text;
   final List<String> tags;
   final DateTime createdAt;
+  final PostSettingsDto postSettingsDto;
 
   PostDto({
     required this.postId,
@@ -14,6 +16,7 @@ class PostDto {
     required this.text,
     required this.tags,
     required this.createdAt,
+    required this.postSettingsDto,
   });
 
   factory PostDto.fromFirestore(DocumentSnapshot doc) {
@@ -32,6 +35,7 @@ class PostDto {
       imageUrl: data['imageUrl'] ?? '',
       text: data['text'] ?? '',
       tags: List<String>.from(data['tags'] ?? []),
+      postSettingsDto: data['postSettings'] != null ? PostSettingsDto.fromJson(data['postSettings']) : PostSettingsDto(),
       createdAt: createdAt,
     );
   }
@@ -44,6 +48,7 @@ class PostDto {
       'imageUrl': imageUrl,
       'text': text,
       'tags': tags,
+      'postSettings': postSettingsDto.toJson(),
       'createdAt': createdAtString,
     };
   }

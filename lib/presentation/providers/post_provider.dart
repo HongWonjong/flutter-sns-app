@@ -7,6 +7,7 @@ import 'package:flutter_sns_app/data/datasources/storage_datasource.dart';
 import 'package:flutter_sns_app/data/repositories/post_repository_impl.dart';
 import 'package:flutter_sns_app/data/repositories/storage_repository_impl.dart';
 import 'package:flutter_sns_app/domain/entities/post.dart';
+import 'package:flutter_sns_app/domain/entities/post_settings.dart';
 import 'package:flutter_sns_app/domain/repositories/post_repository.dart';
 import 'package:flutter_sns_app/domain/repositories/storage_repository.dart';
 import 'package:flutter_sns_app/domain/usecases/create_post_usecase.dart';
@@ -46,12 +47,14 @@ class PostProvider extends StateNotifier<List<Post>> {
     required File imageFile,
     required String text,
     required List<String> tags,
+    required PostSettings postSettings
   }) async {
     try {
       await _createPostUseCase.execute(
         imageFile: imageFile,
         text: text,
         tags: tags,
+        postSettings: postSettings,
       );
       state = [];
       _lastDocument = null;
