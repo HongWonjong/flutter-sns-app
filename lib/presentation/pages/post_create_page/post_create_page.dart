@@ -40,6 +40,19 @@ class PostCreatePage extends ConsumerWidget {
                   const SizedBox(height: 10),
                   const AddTagWidget(),
                   const SizedBox(height: 10),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      return postState.image == null
+                          ? Text('선택된 이미지가 없습니다.')
+                          : PostPreviewWidget(
+                            image: postState.image!,
+                            text: postState.text,
+                            onPositionChanged: postCreateVM.onPositionChanged,
+                            onFilterChanged: postCreateVM.onFilterChanged,
+                          );
+                    },
+                  ),
+                  const SizedBox(height: 10),
                   AddImageWidget(),
                   const SizedBox(height: 10),
                   ElevatedButton(
@@ -48,16 +61,10 @@ class PostCreatePage extends ConsumerWidget {
                             ? null
                             : () async {
                               try {
-                                // await postCreateVM.createPost();
-                                // ScaffoldMessenger.of(context).showSnackBar(
-                                //   const SnackBar(
-                                //     content: Text('게시물이 업로드되었습니다.'),
-                                //   ),
-                                // );
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => const PostPreviewWidget(),
+                                await postCreateVM.createPost();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('게시물이 업로드되었습니다.'),
                                   ),
                                 );
                               } catch (e) {
@@ -69,7 +76,7 @@ class PostCreatePage extends ConsumerWidget {
                     child:
                         postState.isLoading
                             ? const CircularProgressIndicator()
-                            : const Text('세부 설정으로'),
+                            : const Text('게시'),
                   ),
                 ],
               ),

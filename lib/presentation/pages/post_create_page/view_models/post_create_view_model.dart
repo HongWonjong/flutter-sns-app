@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/core/firebase_analytics_service.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,8 +10,28 @@ import 'package:uuid/uuid.dart';
 import '../../../../domain/entities/tag.dart';
 import '../../../providers/post_provider.dart';
 
-class PostSettings{
-  
+class PostSettings {
+  final double leftPosition;
+  final double topPosition;
+  final String filterName;
+
+  const PostSettings({
+    this.leftPosition = 0,
+    this.topPosition = 0,
+    this.filterName = 'default',
+  });
+
+  PostSettings copyWith({
+    double? leftPosition,
+    double? topPosition,
+    String? filterName,
+  }) {
+    return PostSettings(
+      leftPosition: leftPosition ?? this.leftPosition,
+      topPosition: topPosition ?? this.topPosition,
+      filterName: filterName ?? this.filterName,
+    );
+  }
 }
 
 class PostCreateState {
@@ -18,12 +39,14 @@ class PostCreateState {
   final List<Tag> tags;
   final XFile? image;
   final bool isLoading;
+  final PostSettings postSettings;
 
-  PostCreateState({
+  const PostCreateState({
     this.text = '',
     this.tags = const [],
-    this.image = null,
+    this.image,
     this.isLoading = false,
+    this.postSettings = const PostSettings(),
   });
 
   PostCreateState copyWith({
@@ -31,12 +54,14 @@ class PostCreateState {
     List<Tag>? tags,
     XFile? image,
     bool? isLoading,
+    PostSettings? postSettings,
   }) {
     return PostCreateState(
       text: text ?? this.text,
       tags: tags ?? this.tags,
       image: image ?? this.image,
       isLoading: isLoading ?? this.isLoading,
+      postSettings: postSettings ?? this.postSettings,
     );
   }
 }
@@ -76,6 +101,21 @@ class PostCreateViewModel extends StateNotifier<PostCreateState> {
         throw Exception('사람이 포함된 이미지는 저장할 수 없습니다.');
       }
     }
+  }
+
+  void onFilterChanged(String filterName) {
+    state = state.copyWith(
+      postSettings: state.postSettings.copyWith(filterName: filterName)
+    );
+  }
+
+  void onPositionChanged(Offset offset) {
+    state = state.copyWith(
+      postSettings: state.postSettings.copyWith(
+        leftPosition: offset.dx,
+        topPosition: offset.dy,
+      )
+    );
   }
 
   Future<void> createPost() async {
