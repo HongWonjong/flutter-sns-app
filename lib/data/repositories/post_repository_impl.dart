@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_sns_app/data/datasources/post_remote_datasource.dart';
 import 'package:flutter_sns_app/data/dtos/post_dto.dart';
+import 'package:flutter_sns_app/data/dtos/post_settings_dto.dart';
 import 'package:flutter_sns_app/domain/entities/post.dart';
 import 'package:flutter_sns_app/domain/repositories/post_repository.dart';
 
@@ -14,14 +15,17 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Future<List<Post>> getPosts(int limit, DocumentSnapshot? startAfter) async {
     final dtos = await _dataSource.getPosts(limit, startAfter);
-    return dtos.map((dto) => Post(
-      postId: dto.postId,
-      imageUrl: dto.imageUrl,
-      text: dto.text,
-      tags: dto.tags,
-      createdAt: dto.createdAt,
-      likes: [],
-    )).toList();
+    return dtos.map((dto) {
+      return Post(
+        postId: dto.postId,
+        imageUrl: dto.imageUrl,
+        text: dto.text,
+        tags: dto.tags,
+        createdAt: dto.createdAt,
+        likes: [],
+        postSettings: dto.postSettingsDto.toEntity(),
+      );
+    }).toList();
   }
 
   @override
@@ -41,19 +45,30 @@ class PostRepositoryImpl implements PostRepository {
       text: post.text,
       tags: post.tags,
       createdAt: post.createdAt,
+      postSettingsDto: PostSettingsDto.fromEntity(post.postSettings),
     );
     await _dataSource.createPost(dto);
   }
+
   @override
-  Future<List<Post>> searchPostsByTag(String tag, int limit, DocumentSnapshot? startAfter) async {
+  Future<List<Post>> searchPostsByTag(
+    String tag,
+    int limit,
+    DocumentSnapshot? startAfter,
+  ) async {
     final dtos = await _dataSource.searchPostsByTag(tag, limit, startAfter);
-    return dtos.map((dto) => Post(
-      postId: dto.postId,
-      imageUrl: dto.imageUrl,
-      text: dto.text,
-      tags: dto.tags,
-      createdAt: dto.createdAt,
-      likes: [],
-    )).toList();
+    return dtos
+        .map(
+          (dto) => Post(
+            postId: dto.postId,
+            imageUrl: dto.imageUrl,
+            text: dto.text,
+            tags: dto.tags,
+            createdAt: dto.createdAt,
+            postSettings: dto.postSettingsDto.toEntity(),
+            likes: [],
+          ),
+        )
+        .toList();
   }
 }
