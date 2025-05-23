@@ -52,3 +52,4 @@ assets/yolov8n.tflite
 
 sentry.properties
 /pubspec.lock
+upload-keystore.jks
