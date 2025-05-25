@@ -44,6 +44,8 @@ flutter:
   assets:
     - assets/images/background.png
     - assets/images/icon.png
+    - assets/yolov8n.tflite
+    - assets/labels.txt
 
 sentry:
   upload_debug_symbols: true
