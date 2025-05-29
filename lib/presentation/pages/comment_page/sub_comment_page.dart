@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sns_app/presentation/report/report_dialog.dart';
 import 'package:intl/intl.dart';
 import '../../../domain/entities/comment.dart';
 import '../../../domain/entities/sub_comment.dart';
@@ -139,9 +140,17 @@ class _SubCommentPageState extends ConsumerState<SubCommentPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          reply.text,
-                          style: AppStyles.bodyStyle,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                reply.text,
+                                style: AppStyles.bodyStyle,
+                              ),
+                            ),
+                            IconButton(onPressed: () => _showReportDialog(context), icon: Icon(Icons.report))
+                          ],
                         ),
                         SizedBox(height: AppStyles.cardSpacing),
                         Align(
@@ -214,4 +223,11 @@ class _SubCommentPageState extends ConsumerState<SubCommentPage> {
       ),
     );
   }
+}
+
+void _showReportDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (_) => ReportDialog(type: 'subcomment',),
+  );
 }

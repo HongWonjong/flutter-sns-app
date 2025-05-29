@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sns_app/core/firebase_analytics_service.dart';
 import 'package:flutter_sns_app/presentation/pages/comment_page/sub_comment_page.dart';
+import 'package:flutter_sns_app/presentation/report/report_dialog.dart';
 import 'package:intl/intl.dart';
 import '../../../domain/entities/comment.dart';
 import '../../constants/app_styles.dart';
@@ -141,9 +142,17 @@ class _CommentPageState extends ConsumerState<CommentPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            comment.text,
-                            style: AppStyles.commentStyle,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  comment.text,
+                                  style: AppStyles.commentStyle,
+                                ),
+                              ),
+                              IconButton(icon: Icon(Icons.report), onPressed: () => _showReportDialog(context),)
+                            ],
                           ),
                           SizedBox(height: AppStyles.cardSpacing),
                           Align(
@@ -227,4 +236,11 @@ class _CommentPageState extends ConsumerState<CommentPage> {
       ),
     );
   }
+}
+
+void _showReportDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (_) => ReportDialog(type: 'comment',),
+  );
 }
